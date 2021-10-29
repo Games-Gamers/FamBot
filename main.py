@@ -9,6 +9,39 @@ client = discord.Client
 bot = commands.Bot(command_prefix='f.')
 bot.remove_command('help')
 
+famDict = {
+    "isfam": [
+        "WikiWikiWasp",
+        "Wirt.zirp",
+        "bossanova",
+        "Snail",
+        "The Mongoose",
+        "shaggyzero",
+        "ToeUp"
+    ],
+    "notfam": [
+        "Pizza Brat",
+        "amatt",
+        "selcar",
+        "Corpse Eye"
+    ],
+    "jsquad": [
+        "WikiWikiWasp",
+        "Wirt.zirp",
+        "shaggyzero",
+    ]
+}
+
+famList = [
+    "WikiWikiWasp",
+    "Wirt.zirp",
+    "bossanova",
+    "Snail",
+    "The Mongoose",
+    "shaggyzero",
+    "ToeUp"
+]
+
 @bot.event
 async def on_ready():
     print("suh")
@@ -106,15 +139,20 @@ async def amifam(ctx):
         'ur moves are too weak to be fam',
         'not yet',
         'ur fam...ously stupid lmao gottem',
-        'u look like a bird'
+        'u look like a bird',
+        'ur just a superdick',
+        'go play away and do something in ur life',
+        'ur just a real stupid'
     ]
 
-    if ctx.message.author.name == 'WikiWikiWasp' or ctx.message.author.name == 'WikiWikiWasp#1414':
+    if any(ctx.message.author.name in js for js in famDict['jsquad']):
+        await ctx.send('Fam AND JSquad. Jam, if you will.')
+    elif any(ctx.message.author.name in fam for fam in famDict['isfam']):
         await ctx.send('Always have been, fam')
-    elif ctx.message.author.name == 'Wirt.zirp':
-        await ctx.send('Fam *and* a member of JSquad. Nice.')
-    else:
+    elif any(ctx.message.author.name in nfam for nfam in famDict['notfam']):
         await ctx.send(random.choice(nos))
+    else:
+        await ctx.send('Hmm...that remains to be seen. I\'ll be the judge of that. Check back with me later.')
 
 @bot.command()
 async def time(ctx):
