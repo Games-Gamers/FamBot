@@ -48,8 +48,9 @@ async def on_ready():
     
 @bot.event
 async def on_message(msg):
-    """Add FAM Reaction
-    Adds the :FAM: reaction whenever a user sends a message containing 'fam'
+    """Message Responses
+    - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
+    - 'lmao gottem' responses
     Args:
         msg (Message): Discord Message object
     """
@@ -65,7 +66,6 @@ async def on_message(msg):
             await msg.add_reaction(emoji)
     
     # lmao gottem
-    # if ' hava ' in msg.content:
     if search(' hava ', msg.content) \
         or msg.content.startswith('hava ') \
         or msg.content.endswith(' hava') \
@@ -156,7 +156,7 @@ async def amifam(ctx):
 
 @bot.command()
 async def time(ctx):
-    if dt.now().hour > 9:
+    if dt.now().hour > 21:
         await ctx.send('it\'s that time of night, fam')
     else:
         await ctx.send('not yet, fam, but soon')
