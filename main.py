@@ -1,5 +1,6 @@
 import random
 import discord
+from datetime import datetime as dt
 from discord.ext import commands
 from config.settings import DISCORD_TOKEN
 from re import search
@@ -38,7 +39,6 @@ async def on_message(msg):
         or msg.content == 'hava':
         await msg.channel.send('hava nice day fam lmao gottem')
 
-
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(
@@ -60,6 +60,11 @@ async def help(ctx):
     embed.add_field(
         name='f.amifam',
         value='ur not fam',
+        inline=True
+    )
+    embed.add_field(
+        name='f.time',
+        value='that time of night?',
         inline=True
     )
     await ctx.send(embed=embed)
@@ -94,7 +99,28 @@ async def amifam(ctx):
     """
     TODO: fam 'rank' based on how many times they've said 'fam' or used :FAM: on the server
     """
-    await ctx.send('idk yet, still feelin yall out')
+    # await ctx.send('idk yet, still feelin yall out')
+    nos = [
+        'lol no',
+        'u wish',
+        'ur moves are too weak to be fam',
+        'not yet',
+        'ur fam...ously stupid lmao gottem',
+        'u look like a bird'
+    ]
 
+    if ctx.message.author.name == 'WikiWikiWasp' or ctx.message.author.name == 'WikiWikiWasp#1414':
+        await ctx.send('Always have been, fam')
+    elif ctx.message.author.name == 'Wirt.zirp':
+        await ctx.send('Fam *and* a member of JSquad. Nice.')
+    else:
+        await ctx.send(random.choice(nos))
+
+@bot.command()
+async def time(ctx):
+    if dt.now().hour > 9:
+        await ctx.send('it\'s that time of night, fam')
+    else:
+        await ctx.send('not yet, fam, but soon')
 
 bot.run(DISCORD_TOKEN)
