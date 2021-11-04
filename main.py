@@ -56,8 +56,10 @@ async def on_message(msg):
     """
     await bot.process_commands(msg)
     msg.content = msg.content.lower()
-    if msg.author == bot.user or msg.content.startswith('f.'):
+    if msg.author == bot.user:
         return
+    
+    #if msg.content.startswith("f.") and msg.content is not in bot.commands.
     
     # fam react
     if 'fam' in msg.content:
@@ -98,6 +100,11 @@ async def help(ctx):
     embed.add_field(
         name='f.time',
         value='that time of night?',
+        inline=True
+    )
+    embed.add_field(
+        name='f.meme',
+        value='meme copypasta',
         inline=True
     )
     await ctx.send(embed=embed)
@@ -145,20 +152,46 @@ async def amifam(ctx):
         'ur just a real stupid'
     ]
 
-    if any(ctx.message.author.name in js for js in famDict['jsquad']):
+    if any(ctx.author.name in js for js in famDict['jsquad']):
         await ctx.send('Fam AND JSquad. Jam, if you will.')
-    elif any(ctx.message.author.name in fam for fam in famDict['isfam']):
+    elif any(ctx.author.name in fam for fam in famDict['isfam']):
         await ctx.send('Always have been, fam')
-    elif any(ctx.message.author.name in nfam for nfam in famDict['notfam']):
+    elif any(ctx.author.name in nfam for nfam in famDict['notfam']):
         await ctx.send(random.choice(nos))
     else:
-        await ctx.send('Hmm...that remains to be seen. I\'ll be the judge of that. Check back with me later.')
+        await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
 @bot.command()
 async def time(ctx):
-    if dt.now().hour > 21:
+    fam_channels = []
+    v_channels = ctx.guild.voice_channels
+    for v_chan in v_channels:
+        for user in v_chan.members:
+            if any(user.name in fam for fam in famDict['isfam']):
+                fam_channels.append(v_chan.name)
+    if dt.now().hour > 21 or dt.now().hour < 3:
         await ctx.send('it\'s that time of night, fam')
+        if len(fam_channels) == 1:
+            await ctx.send(f'We famming in **#{fam_channels[0]}** right now')
+        elif len(fam_channels) == 2:
+            await ctx.send(f'We famming in **BOTH #{fam_channels[0]} _and_ #{fam_channels[1]}!')
+        elif len(fam_channels) == 3:
+            await ctx.send(f'Yo! We famming in ***ALL*** voice channels! Fuck yea, fam')
+    elif fam_channels:
+        await ctx.send('normally, not yet, but I see some fam in VCs now! It\'s that time of night _somewhere_, right?')
     else:
         await ctx.send('not yet, fam, but soon')
+
+@bot.command()
+async def meme(ctx, *args):
+    meme_arg = ' '.join(args)
+    if 'wets' in meme_arg:
+        await ctx.send('https://c.tenor.com/AxZlzVC4rrMAAAAM/parmesan-parmiggiano.gif')
+    elif 'hurt' in meme_arg:
+        await ctx.send('when you fell from someone\'s butthole into toilet water you piece of shit')
+    elif 'hava'  in meme_arg:
+        await ctx.send('HAVA NICE DAY LMAO GOTTEM FAM')
+    elif 'moves' in meme_arg or 'weak' in meme_arg:
+        await ctx.send('https://c.tenor.com/ULv-OVA89isAAAAM/moves-are-weak-upper-hook.gif')
 
 bot.run(DISCORD_TOKEN)
