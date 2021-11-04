@@ -1,9 +1,11 @@
 import random
+import json
 import discord
 from datetime import datetime as dt
 from discord.ext import commands
 from config.settings import DISCORD_TOKEN
 from structs.responses import *
+from structs.rankings import rank_title
 from re import search
 
 client = discord.Client
@@ -40,8 +42,17 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     print(f'{ctx.author} tried to use {ctx.message.content}')
+    print(error)
     await ctx.send(random.choice(err_msg))
-    
+
+@bot.event
+async def on_member_join(member):
+    with open('structs/users.json', 'r') as f:
+        users = json.load(f)
+    await update_data(users, member)
+    with open('structs/users.json', 'w') as f:
+        json.dump(users, f)
+
 @bot.event
 async def on_message(msg):
     """Message Responses
@@ -55,24 +66,69 @@ async def on_message(msg):
     if msg.author == bot.user:
         return
     
+    
+    
     # fam react
     if 'fam' in msg.content and not msg.content.startswith('f.'):
         emoji = discord.utils.get(msg.guild.emojis, name='FAM')
         if emoji:
             await msg.add_reaction(emoji)
-    
+        with open('structs/users.json', 'r') as f:
+            users = json.load(f)
+        await update_data(users, msg.author)
+        await add_fam_exp(users, msg.author, 1)
+        await fam_up(users, msg.author, msg)
+        with open ('structs/users.json', 'w') as f:
+            json.dump(users, f)
+
     # lmao gottem
     if search(' hava ', msg.content) \
         or msg.content.startswith('hava ') \
         or msg.content.endswith(' hava') \
         or msg.content == 'hava':
         await msg.channel.send('hava nice day fam lmao gottem')
+    if 'gottem' in msg.content:
+        await msg.channel.send('lmao rekt')
     
     # butthole
     if search('looking for', msg.content) \
         or search('where is', msg.content) \
         or search('where are', msg.content):
         await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
+
+async def update_data(users, user):
+    if not f'{user.id}' in users:
+        users[f'{user.id}'] = {}
+        users[f'{user.id}']['name'] = user.name
+        if user.name in famDict['isfam']:
+            users[f'{user.id}']['experience'] = 26
+            users[f'{user.id}']['rank'] = 3
+            users[f'{user.id}']['is_fam'] = True
+            users[f'{user.id}']['title'] = rank_title[3]
+        else:
+            users[f'{user.id}']['experience'] = 0
+            users[f'{user.id}']['rank'] = 1
+            users[f'{user.id}']['is_fam'] = False
+            users[f'{user.id}']['title'] = rank_title[1]
+
+async def add_fam_exp(users, user, exp):
+    users[f'{user.id}']['experience'] += exp
+
+async def fam_up(users, user, msg):
+    # with open('structs/ranking.json', 'r') as g:
+    #     rankings = json.load(g)
+    exp = users[f'{user.id}']['experience']
+    rank_start = users[f'{user.id}']['rank']
+    rank_end = int(exp ** (1/3))
+    if rank_start < rank_end:
+        await msg.channel.send(f'{user.mention} has ranked up to FAM Rank {rank_end}')
+        users[f'{user.id}']['rank'] = rank_end
+    if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
+        await msg.channel.send(f'{user.mention} has earned FAM status and the title of {rank_title[rank_end]}! Nice.')
+        users[f'{user.id}']['is_fam'] = True
+        famDict['isfam'].append(user.name)
+    else:
+        await msg.channel.send(f'{user.mention} has earned the Fam title of "**{rank_title[rank_end]}**"! Nice.')
 
 @bot.command()
 async def help(ctx):
@@ -124,6 +180,9 @@ async def amifam(ctx):
     TODO: fam 'rank' based on how many times they've said 'fam' or used :FAM: on the server
     """
     print(f'{ctx.author} used f.amifam')
+    with open('structs/users.json', 'r') as f:
+            users = json.load(f)
+            
     if any(ctx.author.name in js for js in famDict['jsquad']):
         await ctx.send('Fam AND JSquad. Jam, if you will.')
     elif any(ctx.author.name in fam for fam in famDict['isfam']):
@@ -132,6 +191,37 @@ async def amifam(ctx):
         await ctx.send(random.choice(nos))
     else:
         await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
+
+    embed = discord.Embed(
+        title=f'{ctx.author.display_name}',
+        description='How fam are you?',
+        color=discord.Color.blue()
+    )
+    embed.set_thumbnail(url=ctx.author.avatar_url)
+    if users[f'{ctx.author.id}']['is_fam']:
+        embed.add_field(
+            name='FAM?',
+            value='<:FAM:848761741102153739>',
+            inline=True
+        )
+    else:
+        embed.add_field(
+            name='FAM?',
+            value='<:thor:669591170095120424>',
+            inline=True
+        )
+    embed.add_field(
+        name='RANK',
+        value=users[f'{ctx.author.id}']['rank'],
+        inline=True
+    )
+    embed.add_field(
+        name='TITLE',
+        value=users[f'{ctx.author.id}']['title'],
+        inline=True
+    )
+   
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def time(ctx):
