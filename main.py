@@ -6,6 +6,7 @@ from discord.ext import commands
 from config.settings import DISCORD_TOKEN
 from structs.responses import *
 from structs.rankings import rank_title
+import progressbar as pb
 from re import search
 
 client = discord.Client
@@ -222,8 +223,11 @@ async def amifam(ctx):
         value=users[f'{ctx.author.id}']['title'],
         inline=True
     )
+    pb.generateBar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
+    exp_bar = discord.File("expbar.png")
+    embed.set_image(url="attachment://expbar.png")
    
-    await ctx.send(embed=embed)
+    await ctx.send(file=exp_bar, embed=embed)
 
 @bot.command()
 async def time(ctx):
@@ -266,5 +270,9 @@ async def meme(ctx, *args):
         await ctx.send('https://c.tenor.com/fYkgtSeoiokAAAAC/tomcardy-have-you-checked-your-butthole.gif')
     else:
         await ctx.send(random.choice(err_msg))
+
+@bot.command()
+async def bar(ctx):
+    pb.generateBar(100, 3)
 
 bot.run(DISCORD_TOKEN)
