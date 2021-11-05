@@ -190,12 +190,10 @@ async def amifam(ctx):
         await ctx.send('Fam AND JSquad. Jam, if you will.')
     elif any(ctx.author.name in fam for fam in famDict['isfam']):
         await ctx.send('Always have been, fam')
-    elif any(ctx.author.name in nfam for nfam in famDict['notfam']):
-        await ctx.send(random.choice(nos))
     else:
         await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
-    await update_data(users, payload.member)
+    await update_data(users, ctx.author)
     embed = discord.Embed(
         title=f'{ctx.author.display_name}',
         description='How fam are you?',

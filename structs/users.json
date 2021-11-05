@@ -22,7 +22,7 @@
   },
   "244300334644592640": {
     "name": "Mulchbutler",
-    "experience": 2,
+    "experience": 3,
     "rank": 1,
     "is_fam": false,
     "title": "Weak"
@@ -36,7 +36,7 @@
   },
   "178349230459584512": {
     "name": "Pizza Brat",
-    "experience": 1,
+    "experience": 2,
     "rank": 1,
     "is_fam": false,
     "title": "Weak"
@@ -44,6 +44,13 @@
   "542464841244475407": {
     "name": "The Mongoose",
     "experience": 29,
+    "rank": 3,
+    "is_fam": true,
+    "title": "FAM"
+  },
+  "159416709176885248": {
+    "name": "Snail",
+    "experience": 27,
     "rank": 3,
     "is_fam": true,
     "title": "FAM"
