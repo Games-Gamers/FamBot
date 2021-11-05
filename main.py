@@ -271,8 +271,4 @@ async def meme(ctx, *args):
     else:
         await ctx.send(random.choice(err_msg))
 
-@bot.command()
-async def bar(ctx):
-    pb.generateBar(100, 3)
-
 bot.run(DISCORD_TOKEN)
