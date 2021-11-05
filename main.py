@@ -51,7 +51,7 @@ async def on_member_join(member):
         users = json.load(f)
     await update_data(users, member)
     with open('structs/users.json', 'w') as f:
-        json.dump(users, f)
+        json.dump(users, f, indent=2)
 
 @bot.event
 async def on_message(msg):
@@ -65,9 +65,7 @@ async def on_message(msg):
     msg.content = msg.content.lower()
     if msg.author == bot.user:
         return
-    
-    
-    
+
     # fam react
     if 'fam' in msg.content and not msg.content.startswith('f.'):
         emoji = discord.utils.get(msg.guild.emojis, name='FAM')
@@ -79,7 +77,7 @@ async def on_message(msg):
         await add_fam_exp(users, msg.author, 1)
         await fam_up(users, msg.author, msg)
         with open ('structs/users.json', 'w') as f:
-            json.dump(users, f)
+            json.dump(users, f, indent=2)
 
     # lmao gottem
     if search(' hava ', msg.content) \
@@ -89,12 +87,23 @@ async def on_message(msg):
         await msg.channel.send('hava nice day fam lmao gottem')
     if 'gottem' in msg.content:
         await msg.channel.send('lmao rekt')
-    
+
     # butthole
     if search('looking for', msg.content) \
         or search('where is', msg.content) \
         or search('where are', msg.content):
         await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    if payload.emoji == '<:FAM:848761741102153739>':
+        with open('structs/users.json', 'r') as f:
+            users = json.load(f)
+        await update_data(users, payload.member)
+        await add_fam_exp(users, payload.member, 3)
+        await fam_up(users, payload.member, payload.message.id)
+        with open ('structs/users.json', 'w') as f:
+            json.dump(users, f, indent=2)
 
 async def update_data(users, user):
     if not f'{user.id}' in users:
@@ -123,12 +132,12 @@ async def fam_up(users, user, msg):
     if rank_start < rank_end:
         await msg.channel.send(f'{user.mention} has ranked up to FAM Rank {rank_end}')
         users[f'{user.id}']['rank'] = rank_end
-    if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
-        await msg.channel.send(f'{user.mention} has earned FAM status and the title of {rank_title[rank_end]}! Nice.')
-        users[f'{user.id}']['is_fam'] = True
-        famDict['isfam'].append(user.name)
-    else:
-        await msg.channel.send(f'{user.mention} has earned the Fam title of "**{rank_title[rank_end]}**"! Nice.')
+        if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
+            await msg.channel.send(f'{user.mention} has earned FAM status and the title of {rank_title[rank_end]}! Nice.')
+            users[f'{user.id}']['is_fam'] = True
+            famDict['isfam'].append(user.name)
+        else:
+            await msg.channel.send(f'{user.mention} has earned the Fam title of "**{rank_title[rank_end]}**"! Nice.')
 
 @bot.command()
 async def help(ctx):
@@ -192,13 +201,14 @@ async def amifam(ctx):
     else:
         await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
+    await update_data(users, payload.member)
     embed = discord.Embed(
         title=f'{ctx.author.display_name}',
         description='How fam are you?',
         color=discord.Color.blue()
     )
     embed.set_thumbnail(url=ctx.author.avatar_url)
-    if users[f'{ctx.author.id}']['is_fam']:
+    if users[f'{ctx.author.id}']['is_fam'] or ctx.author.name in famDict['isfam']:
         embed.add_field(
             name='FAM?',
             value='<:FAM:848761741102153739>',
@@ -262,5 +272,7 @@ async def meme(ctx, *args):
     elif 'butthole' in meme_arg:
         await ctx.send('_ski-bap ba-dap **butthole**_')
         await ctx.send('https://c.tenor.com/fYkgtSeoiokAAAAC/tomcardy-have-you-checked-your-butthole.gif')
+    else:
+        await ctx.send(random.choice(err_msg))
 
 bot.run(DISCORD_TOKEN)
