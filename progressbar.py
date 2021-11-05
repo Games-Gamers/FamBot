@@ -10,7 +10,7 @@ def generate_bar(exp, rank):
     draw = ImageDraw.Draw(img) # Allow us to draw on the image
 
     font = ImageFont.truetype("font.ttf", 12) # Load up the font
-    draw.text((0, 3), f"{round(perc/2)}% To level {rank+1}", (240, 240, 240), font=font) # Type the text on the leveling bar (x% To level y)
+    draw.text((0, 3), f"{round(perc/2)}% To rank {rank+1}", (240, 240, 240), font=font) # Type the text on the leveling bar (x% To level y)
 
     TINT_COLOR = (0, 0, 0)  # Setup for transparency
     TRANSPARENCY = .10  # Degree of transparency, 0-100%
