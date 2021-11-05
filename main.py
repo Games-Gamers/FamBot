@@ -91,12 +91,12 @@ async def on_message(msg):
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    if payload.emoji == '<:FAM:848761741102153739>':
+    if payload.emoji.name == 'FAM':
         with open('structs/users.json', 'r') as f:
             users = json.load(f)
         await update_data(users, payload.member)
         await add_fam_exp(users, payload.member, 3)
-        await fam_up(users, payload.member, payload.message.id)
+        await fam_up(users, payload.member, payload.message_id)
         with open ('structs/users.json', 'w') as f:
             json.dump(users, f, indent=2)
 
