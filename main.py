@@ -88,15 +88,28 @@ async def on_message(msg):
         or search('where is', msg.content) \
         or search('where are', msg.content):
         await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
-
-@bot.event
-async def on_raw_reaction_add(payload):
-    if payload.emoji.name == 'FAM':
+        
+    if msg.channel.name == 'starboard' and msg.author.name == 'StarBot':
+        user_mention = msg.embeds[0].fields[0].value
+        user = discord.utils.get(msg.guild.members, mention=user_mention)
         with open('structs/users.json', 'r') as f:
             users = json.load(f)
-        await update_data(users, payload.member)
-        await add_fam_exp(users, payload.member, 3)
-        await fam_up(users, payload.member, payload.message_id)
+        await update_data(users, user)
+        await add_fam_exp(users, user, 5)
+        await fam_up(users, user, msg)
+        
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user == bot.user:
+        return
+    if reaction.emoji == discord.utils.get(reaction.message.guild.emojis, name='FAM'):
+        with open('structs/users.json', 'r') as f:
+            users = json.load(f)
+        await update_data(users, user)
+        await add_fam_exp(users, user, 3)
+        # msg = user.fetch_message()
+        await fam_up(users, user, reaction.message)
         with open ('structs/users.json', 'w') as f:
             json.dump(users, f, indent=2)
 
@@ -124,15 +137,31 @@ async def fam_up(users, user, msg):
     exp = users[f'{user.id}']['experience']
     rank_start = users[f'{user.id}']['rank']
     rank_end = int(exp ** (1/3))
+    
     if rank_start < rank_end:
-        await msg.channel.send(f'{user.mention} has ranked up to FAM Rank {rank_end}')
+        if msg.channel.name != 'starboard':
+            await msg.channel.send(f'{user.mention} has ranked up to FAM Rank {rank_end}')
+        else:
+            chan_id = msg.embeds[0].fields[1].value
+            chan = discord.utils.get(msg.guild.channels, id=chan_id)
+            await chan.send(f'{user.mention} has ranked up to FAM Rank {rank_end}')
+            
         users[f'{user.id}']['rank'] = rank_end
+        
         if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
-            await msg.channel.send(f'{user.mention} has earned FAM status and the title of {rank_title[rank_end]}! Nice.')
+            if msg.channel.name != 'starboard':
+                await msg.channel.send(f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.')
+            else:
+                chan_id = msg.embeds[0].fields[1].value
+                chan = discord.utils.get(msg.guild.channels, id=chan_id)
+                await chan.send(f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.')
+
             users[f'{user.id}']['is_fam'] = True
             famDict['isfam'].append(user.name)
         else:
-            await msg.channel.send(f'{user.mention} has earned the Fam title of "**{rank_title[rank_end]}**"! Nice.')
+            await msg.channel.send(f'You have earned the Fam title of "**{rank_title[rank_end]}**"! Nice.')
+            
+        users[f'{user.id}']['title'] = rank_title[rank_end]
 
 @bot.command()
 async def help(ctx):
