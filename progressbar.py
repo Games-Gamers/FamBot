@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 
-def generateBar(exp, rank):
+def generate_bar(exp, rank):
     req = (rank+1) ** 3 # the required xp for the next rank update this for your use case
     perc = exp / req * 100 # The amount of percent left for the next rank
 

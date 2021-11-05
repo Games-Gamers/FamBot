@@ -223,7 +223,7 @@ async def amifam(ctx):
         value=users[f'{ctx.author.id}']['title'],
         inline=True
     )
-    pb.generateBar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
+    pb.generate_bar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
     exp_bar = discord.File("expbar.png")
     embed.set_image(url="attachment://expbar.png")
    
