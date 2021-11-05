@@ -1,1 +1,23 @@
-{"162813426790301696": {"name": "WikiWikiWasp", "experience": 27, "rank": 3, "is_fam": true, "title": "FAM"}}
+{
+  "162813426790301696": {
+    "name": "WikiWikiWasp",
+    "experience": 40,
+    "rank": 3,
+    "is_fam": true,
+    "title": "FAM"
+  },
+  "223806022588956673": {
+    "name": "nebula",
+    "experience": 1,
+    "rank": 1,
+    "is_fam": false,
+    "title": "Weak"
+  },
+  "233444169723412490": {
+    "name": "dusty_saviour",
+    "experience": 1,
+    "rank": 1,
+    "is_fam": false,
+    "title": "Weak"
+  }
+}

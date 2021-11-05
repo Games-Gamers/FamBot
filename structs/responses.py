@@ -39,5 +39,6 @@ err_msg = [
     'u just like making up stuff, huh?',
     'we just making up stuff now?',
     'fam. pls.',
-    '<:wutthe:672669825960509450>'
+    '<:wutthe:672669825960509450>',
+    '<:thonk:568215444264058880>'
 ]
