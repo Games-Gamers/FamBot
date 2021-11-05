@@ -22,12 +22,6 @@ famDict = {
         "shaggyzero",
         "ToeUp"
     ],
-    "notfam": [
-        "Pizza Brat",
-        "amatt",
-        "selcar",
-        "Corpse Eye"
-    ],
     "jsquad": [
         "WikiWikiWasp",
         "Wirt.zirp",
