@@ -241,7 +241,7 @@ async def time(ctx):
         if len(fam_channels) == 1:
             await ctx.send(f'We famming in **#{fam_channels[0]}** right now')
         elif len(fam_channels) == 2:
-            await ctx.send(f'We famming in **BOTH #{fam_channels[0]} _and_ #{fam_channels[1]}!')
+            await ctx.send(f'We famming in **BOTH #{fam_channels[0]} _and_ #{fam_channels[1]}!**')
         elif len(fam_channels) == 3:
             await ctx.send(f'Yo! We famming in ***ALL*** voice channels! Fuck yea, fam')
     elif fam_channels:
