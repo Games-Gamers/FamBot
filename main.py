@@ -34,6 +34,7 @@ famDict = {
 
 @bot.event
 async def on_ready():
+    random.seed()
     print("suh fam")
 
 @bot.event
@@ -86,9 +87,10 @@ async def on_message(msg):
         await msg.channel.send('lmao rekt')
 
     # butthole
-    if search('looking for', msg.content) \
+    if (search('looking for', msg.content) \
         or search('where is', msg.content) \
-        or search('where are', msg.content):
+        or search('where are', msg.content)) \
+        and random.randint(1, 100) <= 10:
         await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
         
     if msg.channel.name == 'starboard' and msg.author.name == 'StarBot':
@@ -215,9 +217,10 @@ async def amifam(ctx):
     TODO: fam 'rank' based on how many times they've said 'fam' or used :FAM: on the server
     """
     print(f'{ctx.author} used f.amifam')
+
     with open('structs/users.json', 'r') as f:
             users = json.load(f)
-            
+
     if any(ctx.author.name in js for js in famDict['jsquad']):
         await ctx.send('Fam AND JSquad. Jam, if you will.')
     elif any(ctx.author.name in fam for fam in famDict['isfam']):
@@ -254,10 +257,11 @@ async def amifam(ctx):
         value=users[f'{ctx.author.id}']['title'],
         inline=True
     )
+
     pb.generate_bar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
     exp_bar = discord.File("expbar.png")
     embed.set_image(url="attachment://expbar.png")
-   
+
     await ctx.send(file=exp_bar, embed=embed)
 
 @bot.command()
