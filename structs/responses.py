@@ -42,3 +42,18 @@ err_msg = [
     '<:wutthe:672669825960509450>',
     '<:thonk:568215444264058880>'
 ]
+
+gottems = [
+    'lmao rekt',
+    'roasted',
+    'roasted and toasted',
+    'r e k t',
+    'lmao gottem',
+    'lol big rips',
+    'lol get rekt',
+    'https://giphy.com/gifs/deez-nutz-dWfkLpnrZN3QQ', #ha goteem
+    'https://giphy.com/gifs/episode-3-the-studio-web-series-S3VuAxhgyVFFVIvKQE', #got'eem
+    'https://giphy.com/gifs/TEcDhtKS2QPqE', #rekt announcer
+    'https://giphy.com/gifs/savage-supa-hot-fire-super-xT9IgMw9fhuEGUaJqg', #supa hot savage
+    'https://giphy.com/gifs/hyperrpg-burn-trollhunters-got-eem-lRoouslurnhcqn9Byb' #gamer got 'em
+]
