@@ -154,6 +154,7 @@ async def fam_up(users, user, msg):
         users[f'{user.id}']['rank'] = rank_end
         
         if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
+            famDict['isfam'].append(user.id)
             if msg.channel.name != 'starboard':
                 await msg.channel.send(f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.')
             else:
@@ -273,7 +274,8 @@ async def time(ctx):
 
     for v_chan in v_channels:
         for user in v_chan.members:
-            if any(user.name in fam for fam in famDict['isfam']):
+            if any(user.name in fam for fam in famDict['isfam']) \
+                and v_chan.name not in fam_channels:
                 fam_channels.append(v_chan.name)
 
     if dt.now().hour > 21 or dt.now().hour < 3:
