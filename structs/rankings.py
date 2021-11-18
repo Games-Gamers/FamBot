@@ -14,8 +14,6 @@ rank_title = {
 }
 
 def fam_by_rank(fam_rank):
-    # if isinstance(fam_rank, int):
-    #     fam_rank = str(fam_rank)
 
     fam = []
     with open('structs/users.json', 'r') as f:

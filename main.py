@@ -287,8 +287,9 @@ async def whoisfam(ctx):
                 value=fam_by_rank(rank),
                 inline=True
             )
-        except TypeError:
-            await ctx.send("json done fucked up")
+        except TypeError as err:
+            chan = ctx.guild.get_channel(571507701935374344)
+            await chan.send(f'yo...so...I kinda fucked up in {ctx.message.jump_url}\n{err}')
             break
 
     await ctx.send(embed=embed)    
