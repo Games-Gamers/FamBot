@@ -231,6 +231,9 @@ async def amifam(ctx):
         await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
     await update_data(users, ctx.author)
+    with open ('structs/users.json', 'w') as f:
+        json.dump(users, f, indent=2)
+            
     embed = discord.Embed(
         title=f'{ctx.author.display_name}',
         description='How fam are you?',
@@ -291,7 +294,8 @@ async def whoisfam(ctx):
             chan = ctx.guild.get_channel(571507701935374344)
             await chan.send(f'yo...so...I kinda fucked up in {ctx.message.jump_url}\n{err}')
             break
-
+    
+    embed.set_footer(random.choice(memes))    
     await ctx.send(embed=embed)    
 
 @bot.command()
