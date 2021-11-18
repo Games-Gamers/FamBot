@@ -6,8 +6,8 @@ import discord
 from datetime import datetime as dt
 from discord.ext import commands
 from config.settings import DISCORD_TOKEN
-from structs.responses import *
-from structs.rankings import rank_title
+from structs.responses import memes, err_msg, gottems
+from structs.rankings import fam_by_rank, rank_title
 import progressbar as pb
 from re import search
 
@@ -221,7 +221,7 @@ async def amifam(ctx):
     print(f'{ctx.author} used f.amifam')
 
     with open('structs/users.json', 'r') as f:
-            users = json.load(f)
+        users = json.load(f)
 
     if any(ctx.author.name in js for js in famDict['jsquad']):
         await ctx.send('Fam AND JSquad. Jam, if you will.')
@@ -265,6 +265,33 @@ async def amifam(ctx):
     embed.set_image(url="attachment://expbar.png")
 
     await ctx.send(file=exp_bar, embed=embed)
+
+@bot.command()
+async def whoisfam(ctx):
+    print(f'{ctx.author} used f.whoisfam')
+
+    with open('structs/users.json', 'r') as f:
+        users = json.load(f)
+            
+    await update_data(users, ctx.author)
+    
+    for user_id in users:
+	    if any("1" in rank for rank in users[user_id]["rank"]):
+		    print(users[user_id]["name"])
+    
+    embed = discord.Embed(
+        title='Who Is Fam?',
+        description='The Fam by Rank',
+        color=discord.Color.blue()
+    )
+    for rank in range(10):
+        embed.add_field(
+            name=rank_title[rank].upper(),
+            value=fam_by_rank(rank),
+            inline=True
+        )
+    
+    await ctx.send(embed=embed)    
 
 @bot.command()
 async def time(ctx):
