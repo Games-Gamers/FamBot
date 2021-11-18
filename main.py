@@ -81,13 +81,14 @@ async def on_message(msg):
     if search(' hava ', msg.content) \
         or msg.content.startswith('hava ') \
         or msg.content.endswith(' hava') \
-        or msg.content == 'hava':
+        or msg.content == 'hava' \
+        and not msg.content.startswith("f."):
         await msg.channel.send('hava nice day fam lmao gottem')
     if 'gottem' in msg.content:
-        await msg.channel.send('lmao rekt')
+        await msg.channel.send(random.choice(gottems))
 
     # butthole
-    if (search('looking for', msg.content) \
+    if (search('looking for ', msg.content) \
         or search('where is', msg.content) \
         or search('where are', msg.content)) \
         and random.randint(1, 100) <= 10:
@@ -153,6 +154,7 @@ async def fam_up(users, user, msg):
         users[f'{user.id}']['rank'] = rank_end
         
         if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
+            famDict['isfam'].append(user.id)
             if msg.channel.name != 'starboard':
                 await msg.channel.send(f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.')
             else:
@@ -272,7 +274,8 @@ async def time(ctx):
 
     for v_chan in v_channels:
         for user in v_chan.members:
-            if any(user.name in fam for fam in famDict['isfam']):
+            if any(user.name in fam for fam in famDict['isfam']) \
+                and v_chan.name not in fam_channels:
                 fam_channels.append(v_chan.name)
 
     if dt.now().hour > 21 or dt.now().hour < 3:
