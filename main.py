@@ -275,22 +275,22 @@ async def whoisfam(ctx):
             
     await update_data(users, ctx.author)
     
-    for user_id in users:
-	    if any("1" in rank for rank in users[user_id]["rank"]):
-		    print(users[user_id]["name"])
-    
     embed = discord.Embed(
         title='Who Is Fam?',
         description='The Fam by Rank',
         color=discord.Color.blue()
     )
-    for rank in range(10):
-        embed.add_field(
-            name=rank_title[rank].upper(),
-            value=fam_by_rank(rank),
-            inline=True
-        )
-    
+    for rank in range(1, 11, 1):
+        try:
+            embed.add_field(
+                name=rank_title[rank].upper(),
+                value=fam_by_rank(rank),
+                inline=True
+            )
+        except TypeError:
+            await ctx.send("json done fucked up")
+            break
+
     await ctx.send(embed=embed)    
 
 @bot.command()

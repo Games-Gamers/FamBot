@@ -14,17 +14,19 @@ rank_title = {
 }
 
 def fam_by_rank(fam_rank):
-    if isinstance(fam_rank, int):
-        fam_rank = str(fam_rank)
+    # if isinstance(fam_rank, int):
+    #     fam_rank = str(fam_rank)
 
     fam = []
     with open('structs/users.json', 'r') as f:
         users = json.load(f)
 
     for user_id in users:
-        if any(fam_rank in rank for rank in users[user_id]["rank"]):
+        if users[user_id]["rank"] == fam_rank:
             fam.append(users[user_id]["name"])
-    
-    fam_str = "\n".join(fam)
-    
-    return fam_str
+
+    if fam:
+        fam_str = "\n".join(fam)
+        return fam_str
+    else:
+        return "none"
