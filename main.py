@@ -292,7 +292,7 @@ async def whoisfam(ctx):
             )
         except TypeError as err:
             chan = ctx.guild.get_channel(571507701935374344)
-            await chan.send(f'yo...so...I kinda fucked up in {ctx.message.jump_url}\n{err}')
+            await chan.send(f'yo...so...my moves were kinda weak in {ctx.message.jump_url}\n{err}')
             break
     
     embed.set_footer(text=random.choice(memes))    
