@@ -295,7 +295,7 @@ async def whoisfam(ctx):
             await chan.send(f'yo...so...I kinda fucked up in {ctx.message.jump_url}\n{err}')
             break
     
-    embed.set_footer(random.choice(memes))    
+    embed.set_footer(text=random.choice(memes))    
     await ctx.send(embed=embed)    
 
 @bot.command()
