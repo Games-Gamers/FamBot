@@ -2,6 +2,7 @@
 
 import random
 import json
+import os
 import discord
 from datetime import datetime as dt
 from discord.ext import commands
@@ -9,7 +10,6 @@ from config.settings import DISCORD_TOKEN
 from structs.responses import *
 from structs.rankings import rank_title
 import progressbar as pb
-from re import search
 
 client = discord.Client
 bot = commands.Bot(command_prefix='f.')
@@ -77,23 +77,6 @@ async def on_message(msg):
         with open ('structs/users.json', 'w') as f:
             json.dump(users, f, indent=2)
 
-    # lmao gottem
-    if search(' hava ', msg.content) \
-        or msg.content.startswith('hava ') \
-        or msg.content.endswith(' hava') \
-        or msg.content == 'hava' \
-        and not msg.content.startswith("f."):
-        await msg.channel.send('hava nice day fam lmao gottem')
-    if 'gottem' in msg.content:
-        await msg.channel.send(random.choice(gottems))
-
-    # butthole
-    if (search('looking for ', msg.content) \
-        or search('where is', msg.content) \
-        or search('where are', msg.content)) \
-        and random.randint(1, 100) <= 10:
-        await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
-        
     if msg.channel.name == 'starboard' and msg.author.name == 'StarBot':
         user_mention = msg.embeds[0].fields[0].value
         user = discord.utils.get(msg.guild.members, mention=user_mention)
@@ -291,22 +274,15 @@ async def time(ctx):
     else:
         await ctx.send('not yet, fam, but soon')
 
-@bot.command()
-async def meme(ctx, *args):
-    print(f'{ctx.author} used f.meme')
-    meme_arg = ' '.join(args)
-    if 'wets' in meme_arg:
-        await ctx.send('https://c.tenor.com/AxZlzVC4rrMAAAAM/parmesan-parmiggiano.gif')
-    elif 'hurt' in meme_arg:
-        await ctx.send('when you fell from someone\'s butthole into toilet water you piece of shit')
-    elif 'hava'  in meme_arg:
-        await ctx.send('HAVA NICE DAY LMAO GOTTEM FAM')
-    elif 'moves' in meme_arg or 'weak' in meme_arg:
-        await ctx.send('https://c.tenor.com/ULv-OVA89isAAAAM/moves-are-weak-upper-hook.gif')
-    elif 'butthole' in meme_arg:
-        await ctx.send('_ski-bap ba-dap **butthole**_')
-        await ctx.send('https://c.tenor.com/fYkgtSeoiokAAAAC/tomcardy-have-you-checked-your-butthole.gif')
-    else:
-        await ctx.send(random.choice(err_msg))
+# Grab all the .py files from the cogs directory and load them into the bot
+# This lets us keep the main file simple and exports all command logic to the cogs files
+cogs = [x.replace('.py', '') for x in os.listdir('cogs') if x.endswith('.py')]
+for extension in cogs:
+    try:
+        bot.load_extension(f'cogs.{extension}')
+        print(f'Loaded extension: {extension}')
+    except Exception as e:
+        print(f'LoadError: {extension}\n'
+                f'{type(e).__name__}: {e}')
 
 bot.run(DISCORD_TOKEN)
