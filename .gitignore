@@ -354,3 +354,6 @@ MigrationBackup/
 # Environments
 .env
 .venv
+
+# nohup log output
+nohup.out

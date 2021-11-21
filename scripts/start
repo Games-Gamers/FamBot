@@ -1,0 +1,33 @@
+#!/bin/bash
+
+nohup_flag=''
+docker_flag=''
+
+print_usage() {
+  printf "Usage:\n  -n to launch with nohup\n  -d to launch with docker\n -dn to run with docker detached"
+}
+
+while getopts 'dn' flag; do
+  case "${flag}" in
+    n) nohup_flag='true' ;;
+    d) docker_flag='true' ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+if [[ $docker_flag == "true" ]]; then
+  if [[ $nohup_flag == "true" ]]; then
+    echo running with detached docker
+    docker run -d --env-file ./.env --name=fambot wikiwikiwasp/fambot
+  else 
+    echo running with docker
+    docker run -it --env-file ./.env --name=fambot wikiwikiwasp/fambot
+  fi
+elif [[ $nohup_flag == "true" ]]; then
+  echo running with nohup
+  nohup ./main.py &
+else
+  echo running with python
+  python main.py
+fi

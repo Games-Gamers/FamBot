@@ -1,0 +1,21 @@
+#!/bin/bash
+
+pid=$(ps -ef | grep -v grep | grep python3 | awk '{ print $2 }')
+
+if [[ $pid == "" ]]; then
+    # There wasn't a nohup pid, check for docker
+    pid=$(docker ps -f name=fambot | grep fambot)
+    
+    if [[ $pid == "" ]]; then
+        # No docker found, echo and exit
+        echo No instance of FamBot found
+        exit 1
+    else
+        # Kill the docker process
+        docker stop fambot
+        docker rm fambot
+    fi
+else
+    # We got the nohup pid from ps
+    kill $pid
+fi
