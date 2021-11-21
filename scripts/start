@@ -9,31 +9,27 @@ fi
 
 
 
-nohup_flag=''
+detached_flag='-it'
 docker_flag=''
+rasppi_flag=''
 
 print_usage() {
-  printf "Usage:\n  -n to launch with nohup\n  -d to launch with docker\n -dn to run with docker detached"
+  printf "Usage:\n  no options to run with regular python\n  -n to launch with nohup\n  -d to launch with docker\n -dn to run with docker detached\n  -dr to run with the raspberrypi docker image\n  -drn to run the raspberry pi image detached"
 }
 
-while getopts 'dn' flag; do
+while getopts 'dnr' flag; do
   case "${flag}" in
-    n) nohup_flag='true' ;;
+    n) detached_flag='-d' ;;
     d) docker_flag='true' ;;
+    r) rasppi_flag=':armv7' ;;
     *) print_usage
        exit 1 ;;
   esac
 done
 
 if [[ $docker_flag == "true" ]]; then
-  if [[ $nohup_flag == "true" ]]; then
-    echo running with detached docker
-    docker run -d --env-file ./.env --name=fambot wikiwikiwasp/fambot
-  else 
-    echo running with docker
-    docker run -it --env-file ./.env --name=fambot wikiwikiwasp/fambot
-  fi
-elif [[ $nohup_flag == "true" ]]; then
+  docker run $detached_flag --env-file ./.env --name=fambot wikiwikiwasp/fambot$rasppi_flag
+elif [[ $detached_flag == "-it" ]]; then
   echo running with nohup
   nohup ./main.py &
 else
