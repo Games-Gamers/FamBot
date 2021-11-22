@@ -1,0 +1,30 @@
+#!/bin/bash
+
+
+push_flag=""
+rasppi_flag=""
+
+
+print_usage() {
+  printf "Usage:\n  -p push the build as well\n  -r build for the raspberry pi"
+}
+
+
+while getopts 'pr' flag; do
+  case "${flag}" in
+    p) push_flag='true' ;;
+    r) rasppi_flag='true' ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+if [[ $rasppi_flag == "true" ]]; then
+    docker buildx build --platform linux/arm/v7 -t wikiwikiwasp/fambot:armv7 .
+else
+    docker build -t wikiwikiwasp/fambot .
+fi
+
+if [[ $push_flag == "true" ]]; then
+    docker push wikiwikiwasp/fambot
+fi

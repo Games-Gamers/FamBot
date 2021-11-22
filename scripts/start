@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+if [ ! -f .env ]; then
+    echo ".env file not found! please create one and try again"
+    exit 1
+fi
+
+
+
+
+detached_flag='-it'
+docker_flag=''
+rasppi_flag=''
+
+print_usage() {
+  printf "Usage:\n  no options to run with regular python\n  -n to launch with nohup\n  -d to launch with docker\n -dn to run with docker detached\n  -dr to run with the raspberrypi docker image\n  -drn to run the raspberry pi image detached"
+}
+
+while getopts 'dnr' flag; do
+  case "${flag}" in
+    n) detached_flag='-d' ;;
+    d) docker_flag='true' ;;
+    r) rasppi_flag=':armv7' ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+if [[ $docker_flag == "true" ]]; then
+  docker run $detached_flag --env-file ./.env --name=fambot wikiwikiwasp/fambot$rasppi_flag
+elif [[ $detached_flag == "-it" ]]; then
+  echo running with nohup
+  nohup ./main.py &
+else
+  echo running with python
+  python main.py
+fi
