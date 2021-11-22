@@ -29,7 +29,7 @@ done
 
 if [[ $docker_flag == "true" ]]; then
   docker run $detached_flag --env-file ./.env --name=fambot wikiwikiwasp/fambot$rasppi_flag
-elif [[ $detached_flag == "-it" ]]; then
+elif [[ $detached_flag == "-d" ]]; then
   echo running with nohup
   nohup ./main.py &
 else
