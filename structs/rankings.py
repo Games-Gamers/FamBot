@@ -1,3 +1,5 @@
+import json
+
 rank_title = {
     1: 'Weak',
     2: 'Step Fam',
@@ -10,3 +12,19 @@ rank_title = {
     9: 'God Fam',
     10: 'OnlyFams'
 }
+
+def fam_by_rank(fam_rank):
+
+    fam = []
+    with open('structs/users.json', 'r') as f:
+        users = json.load(f)
+
+    for user_id in users:
+        if users[user_id]["rank"] == fam_rank:
+            fam.append(users[user_id]["name"])
+
+    if fam:
+        fam_str = "\n".join(fam)
+        return fam_str
+    else:
+        return "none"
