@@ -141,7 +141,8 @@ async def fam_up(users, user, msg):
             message += f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.'
         else:
             message += f'You have earned the Fam title of "**{rank_title[rank_end]}**"! Nice.'
-            
+        
+        users[f'{user.id}']['rank'] = rank_end
         users[f'{user.id}']['title'] = rank_title[rank_end]
         await channel.send(message)
 
