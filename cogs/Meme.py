@@ -1,6 +1,6 @@
 from discord.ext import commands
 import random
-from structs.responses import memes, err_msg, gottems
+from structs.responses import memes, err_msg
 
 
 class Meme(commands.Cog):
@@ -24,6 +24,15 @@ class Meme(commands.Cog):
             await ctx.send('https://c.tenor.com/fYkgtSeoiokAAAAC/tomcardy-have-you-checked-your-butthole.gif')
         else:
             await ctx.send(random.choice(err_msg))
+        
+    
+    @commands.command()
+    async def fam(self, ctx):
+        """
+        TODO: random 'fam' meme
+        """
+        print(f'{ctx.author} used f.fam')
+        await ctx.send(random.choice(memes))
 
 def setup(bot):
 	bot.add_cog(Meme(bot)) 
