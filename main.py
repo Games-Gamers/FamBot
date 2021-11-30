@@ -1,36 +1,17 @@
 #!/usr/bin/env python3
 
 import random
-import json
 import os
 import discord
-from datetime import datetime as dt
 from discord.ext import commands
 from config.settings import DISCORD_TOKEN
-from structs.responses import memes, err_msg, gottems
-from structs.rankings import fam_by_rank, rank_title
-import progressbar as pb
+from structs.responses import err_msg
 
 client = discord.Client
 bot = commands.Bot(command_prefix='f.')
 bot.remove_command('help')
 
-famDict = {
-    "isfam": [
-        "WikiWikiWasp",
-        "Wirt.zirp",
-        "bossanova",
-        "Snail",
-        "The Mongoose",
-        "shaggyzero",
-        "ToeUp"
-    ],
-    "jsquad": [
-        "WikiWikiWasp",
-        "Wirt.zirp",
-        "shaggyzero",
-    ]
-}
+
 
 @bot.event
 async def on_ready():
@@ -105,6 +86,7 @@ async def update_data(users, user):
     if not f'{user.id}' in users:
         users[f'{user.id}'] = {}
         users[f'{user.id}']['name'] = user.name
+
         if user.name in famDict['isfam']:
             users[f'{user.id}']['experience'] = 26
             users[f'{user.id}']['rank'] = 3
