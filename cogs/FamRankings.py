@@ -131,7 +131,7 @@ class FamRankings(commands.Cog):
             message = f'{user.mention} has ranked up to FAM Rank {rank_end}\n'
                         
             # At rank 3, they get assigned the FAM status along with the rank up
-            if rank_end == 3 and users[f'{user.id}']['is_fam'] == False:
+            if rank_end >= 3 and users[f'{user.id}']['is_fam'] == False:
                 users[f'{user.id}']['is_fam'] = True
                 famDict['isfam'].append(user.name)
                 message += f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.'
@@ -140,6 +140,7 @@ class FamRankings(commands.Cog):
             
             users[f'{user.id}']['rank'] = rank_end
             users[f'{user.id}']['title'] = rank_title[rank_end]
+            users[f'{user.id}']['experience'] = 0
             await channel.send(message)
 
     @commands.command()
@@ -177,7 +178,6 @@ class FamRankings(commands.Cog):
             inline=True
         )
         await ctx.send(embed=embed)
-
 
     @commands.command()
     async def amifam(self, ctx):
