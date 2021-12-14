@@ -119,7 +119,7 @@ class FamRankings(commands.Cog):
         exp = users[f'{user.id}']['experience']
         rank_start = users[f'{user.id}']['rank']
         rank_end = int(exp ** (1/3))
-
+        
         # If they're not max rank and they can rank up due to some bizarre equation
         if rank_start < 10 and rank_start < rank_end:
             channel = msg.channel
