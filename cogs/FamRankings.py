@@ -1,32 +1,32 @@
-import discord
-from discord.ext import commands
-from structs.rankings import fam_by_rank, rank_title
-from structs.responses import memes
-import progressbar as pb
+import json
 import random
 from datetime import datetime as dt
+import discord
+from discord.ext import commands
+import progressbar as pb
+from structs.responses import memes
+from structs.rankings import fam_by_rank, rank_title, famDict
 
 
-import json
-
-famDict = {
-    "isfam": [
-        "WikiWikiWasp",
-        "Wirt.zirp",
-        "bossanova",
-        "Snail",
-        "The Mongoose",
-        "shaggyzero",
-        "ToeUp"
-    ],
-    "jsquad": [
-        "WikiWikiWasp",
-        "Wirt.zirp",
-        "shaggyzero",
-    ]
-}
+# famDict = {
+#     "isfam": [
+#         "WikiWikiWasp",
+#         "Wirt.zirp",
+#         "bossanova",
+#         "Snail",
+#         "The Mongoose",
+#         "shaggyzero",
+#         "ToeUp"
+#     ],
+#     "jsquad": [
+#         "WikiWikiWasp",
+#         "Wirt.zirp",
+#         "shaggyzero",
+#     ]
+# }
 
 filepath = 'structs/users.json'
+
 
 class FamRankings(commands.Cog):
     def __init__(self, bot):
@@ -36,6 +36,7 @@ class FamRankings(commands.Cog):
         with open(filepath, 'r') as f:
             users = json.load(f)
             return users
+
     def writeFile(self, users):
         with open(filepath, 'w') as f:
             json.dump(users, f, indent=2)
@@ -76,7 +77,6 @@ class FamRankings(commands.Cog):
             await self.update_data(users, user)
             await self.add_fam_exp(users, user, 5)
             await self.fam_up(users, user, msg)
-            
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
@@ -119,7 +119,7 @@ class FamRankings(commands.Cog):
         exp = users[f'{user.id}']['experience']
         rank_start = users[f'{user.id}']['rank']
         rank_end = int(exp ** (1/3))
-        
+
         # If they're not max rank and they can rank up due to some bizarre equation
         if rank_start < 10 and rank_start < rank_end:
             channel = msg.channel
@@ -129,7 +129,7 @@ class FamRankings(commands.Cog):
                 channel = discord.utils.get(msg.guild.channels, id=chan_id)
 
             message = f'{user.mention} has ranked up to FAM Rank {rank_end}\n'
-                        
+
             # At rank 3, they get assigned the FAM status along with the rank up
             if rank_end >= 3 and users[f'{user.id}']['is_fam'] == False:
                 users[f'{user.id}']['is_fam'] = True
@@ -137,7 +137,7 @@ class FamRankings(commands.Cog):
                 message += f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.'
             else:
                 message += f'You have earned the Fam title of "**{rank_title[rank_end]}**"! Nice.'
-            
+
             users[f'{user.id}']['rank'] = rank_end
             users[f'{user.id}']['title'] = rank_title[rank_end]
             users[f'{user.id}']['experience'] = 0
@@ -197,7 +197,7 @@ class FamRankings(commands.Cog):
 
         await self.update_data(users, ctx.author)
         self.writeFile(users)
-                
+
         embed = discord.Embed(
             title=f'{ctx.author.display_name}',
             description='How fam are you?',
@@ -227,7 +227,8 @@ class FamRankings(commands.Cog):
             inline=True
         )
 
-        pb.generate_bar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
+        pb.generate_bar(users[f'{ctx.author.id}']
+                        ['experience'], users[f'{ctx.author.id}']['rank'])
         exp_bar = discord.File("expbar.png")
         embed.set_image(url="attachment://expbar.png")
 
@@ -238,9 +239,9 @@ class FamRankings(commands.Cog):
         print(f'{ctx.author} used f.whoisfam')
 
         users = self.readFile()
-                
+
         await self.update_data(users, ctx.author)
-        
+
         embed = discord.Embed(
             title='Who Is Fam?',
             description='The Fam by Rank',
@@ -257,9 +258,9 @@ class FamRankings(commands.Cog):
                 chan = ctx.guild.get_channel(571507701935374344)
                 await chan.send(f'yo...so...my moves were kinda weak in {ctx.message.jump_url}\n{err}')
                 break
-        
-        embed.set_footer(text=random.choice(memes))    
-        await ctx.send(embed=embed)    
+
+        embed.set_footer(text=random.choice(memes))
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def time(self, ctx):
@@ -270,7 +271,7 @@ class FamRankings(commands.Cog):
         for v_chan in v_channels:
             for user in v_chan.members:
                 if any(user.name in fam for fam in famDict['isfam']) \
-                    and v_chan.name not in fam_channels:
+                        and v_chan.name not in fam_channels:
                     fam_channels.append(v_chan.name)
 
         if dt.now().hour > 21 or dt.now().hour < 3:
@@ -286,5 +287,6 @@ class FamRankings(commands.Cog):
         else:
             await ctx.send('not yet, fam, but soon')
 
+
 def setup(bot):
-	bot.add_cog(FamRankings(bot)) 
+    bot.add_cog(FamRankings(bot))
