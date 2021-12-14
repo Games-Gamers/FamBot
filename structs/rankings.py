@@ -13,6 +13,23 @@ rank_title = {
     10: 'OnlyFams'
 }
 
+famDict = {
+    "isfam": [
+        "WikiWikiWasp",
+        "Wirt.zirp",
+        "bossanova",
+        "Snail",
+        "The Mongoose",
+        "shaggyzero",
+        "ToeUp"
+    ],
+    "jsquad": [
+        "WikiWikiWasp",
+        "Wirt.zirp",
+        "shaggyzero",
+    ]
+}
+
 def fam_by_rank(fam_rank):
 
     fam = []
