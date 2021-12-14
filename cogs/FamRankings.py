@@ -7,26 +7,7 @@ import progressbar as pb
 from structs.responses import memes
 from structs.rankings import fam_by_rank, rank_title, famDict
 
-
-# famDict = {
-#     "isfam": [
-#         "WikiWikiWasp",
-#         "Wirt.zirp",
-#         "bossanova",
-#         "Snail",
-#         "The Mongoose",
-#         "shaggyzero",
-#         "ToeUp"
-#     ],
-#     "jsquad": [
-#         "WikiWikiWasp",
-#         "Wirt.zirp",
-#         "shaggyzero",
-#     ]
-# }
-
 filepath = 'structs/users.json'
-
 
 class FamRankings(commands.Cog):
     def __init__(self, bot):
@@ -227,8 +208,7 @@ class FamRankings(commands.Cog):
             inline=True
         )
 
-        pb.generate_bar(users[f'{ctx.author.id}']
-                        ['experience'], users[f'{ctx.author.id}']['rank'])
+        pb.generate_bar(users[f'{ctx.author.id}']['experience'], users[f'{ctx.author.id}']['rank'])
         exp_bar = discord.File("expbar.png")
         embed.set_image(url="attachment://expbar.png")
 
