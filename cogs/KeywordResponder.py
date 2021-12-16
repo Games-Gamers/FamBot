@@ -35,8 +35,8 @@ class KeywordResponder(commands.Cog):
 
         # butthole
         if (search('looking for ', msg.content) \
-            or search('where is', msg.content) \
-            or search('where are', msg.content)) \
+            or search('where is ', msg.content) \
+            or search('where are ', msg.content)) \
             and random.randint(1, 100) >= 90:
             await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
 
