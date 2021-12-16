@@ -33,14 +33,6 @@ class KeywordResponder(commands.Cog):
         if 'gottem' in msg.content:
             await msg.channel.send(random.choice(gottems))
 
-        # butthole
-        if (search('looking for ', msg.content) \
-            or search('where is', msg.content) \
-            or search('where are', msg.content)) \
-            and random.randint(1, 100) <= 99:
-            await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
-
-
 
 
 def setup(bot):
