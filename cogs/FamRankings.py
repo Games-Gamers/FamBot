@@ -228,16 +228,11 @@ class FamRankings(commands.Cog):
             color=discord.Color.blue()
         )
         for rank in range(1, 11, 1):
-            try:
-                embed.add_field(
-                    name=rank_title[rank].upper(),
-                    value=fam_by_rank(rank),
-                    inline=True
-                )
-            except TypeError as err:
-                chan = ctx.guild.get_channel(571507701935374344)
-                await chan.send(f'yo...so...my moves were kinda weak in {ctx.message.jump_url}\n{err}')
-                break
+            embed.add_field(
+                name=rank_title[rank].upper(),
+                value=fam_by_rank(rank),
+                inline=True
+            )
 
         embed.set_footer(text=random.choice(memes))
         await ctx.send(embed=embed)

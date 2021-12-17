@@ -4,7 +4,7 @@ import random
 import os
 import discord
 from discord.ext import commands
-from config.settings import DISCORD_TOKEN
+from config.settings import DISCORD_TOKEN, ERROR_CHANNEL
 from structs.responses import err_msg
 
 client = discord.Client
@@ -22,6 +22,8 @@ async def on_ready():
 async def on_command_error(ctx, error):
     print(f'{ctx.author} tried to use {ctx.message.content}')
     print(error)
+    chan = ctx.guild.get_channel(int(ERROR_CHANNEL))
+    await chan.send(f'yo...so...my moves were kinda weak in {ctx.message.jump_url}\n{error}')
     await ctx.send(random.choice(err_msg))
 
 
