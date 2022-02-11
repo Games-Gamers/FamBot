@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-RUN sudo rm -rf /usr/bin/lsb_release
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
