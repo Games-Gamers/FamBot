@@ -3,11 +3,11 @@
 import random
 import os
 import discord
+import signal
 from discord.ext import commands
-from config.settings import DISCORD_TOKEN, ERROR_CHANNEL
+from config.settings import DISCORD_TOKEN, ERROR_CHANNEL, LOG_CHANNEL, GG_GUILD
 from structs.responses import err_msg
 
-client = discord.Client
 bot = commands.Bot(command_prefix='f.')
 bot.remove_command('help')
 
@@ -17,6 +17,9 @@ bot.remove_command('help')
 async def on_ready():
     random.seed()
     print("suh fam")
+    if (LOG_CHANNEL is not None):
+        chan = await bot.fetch_channel(int(LOG_CHANNEL))
+        await chan.send("suh fam")
 
 @bot.event
 async def on_command_error(ctx, error):
