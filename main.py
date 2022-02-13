@@ -3,12 +3,11 @@
 import random
 import os
 import discord
-import signal
 from discord.ext import commands
-from config.settings import DISCORD_TOKEN, ERROR_CHANNEL, LOG_CHANNEL, GG_GUILD
+from config.settings import DISCORD_TOKEN, ERROR_CHANNEL, LOG_CHANNEL
 from structs.responses import err_msg
 
-bot = commands.Bot(command_prefix='f.')
+bot = commands.Bot(command_prefix='f.', intents=discord.Intents.all())
 bot.remove_command('help')
 
 

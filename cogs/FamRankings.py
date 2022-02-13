@@ -1,4 +1,4 @@
-import json
+import psycopg2
 import random
 from datetime import datetime as dt
 import discord
@@ -6,27 +6,50 @@ from discord.ext import commands
 import progressbar as pb
 from structs.responses import memes
 from structs.rankings import fam_by_rank, rank_title, famDict
+from config.settings import POSTGRES_PASSWORD
 
 filepath = 'structs/users.json'
+
+conn = psycopg2.connect(host="localhost", database="postgres", user="postgres", password=POSTGRES_PASSWORD)
+cur = conn.cursor()
 
 class FamRankings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        cur.execute('SELECT version()')
+        print('PostgreSQL database version:', cur.fetchone())
 
     def readFile(self):
-        with open(filepath, 'r') as f:
-            users = json.load(f)
-            return users
+        sql = """
+            SELECT * FROM fam
+        """
+        cur.execute(sql)
+        users = {}
+        row = cur.fetchone()
+        while row is not None:
+            id, name, experience, rank, is_fam, title = row
+            users[id] = { 
+                "name": name, 
+                "experience": experience, 
+                "rank": rank, 
+                "is_fam": is_fam, 
+                "title": title
+            }
+            row = cur.fetchone()
+        return users
 
-    def writeFile(self, users):
-        with open(filepath, 'w') as f:
-            json.dump(users, f, indent=2)
+    def writeFile(self):
+        sql = """
+            SELECT * FROM fam
+        """
+        cur.execute(sql)
+        print(cur.fetchall())
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         users = self.readFile()
-        await self.update_data(users, member)
-        self.writeFile(users)
+        await self.update_data(member)
+        self.writeFile()
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -45,53 +68,51 @@ class FamRankings(commands.Cog):
             emoji = discord.utils.get(msg.guild.emojis, name='FAM')
             if emoji:
                 await msg.add_reaction(emoji)
-            users = self.readFile()
-            await self.update_data(users, msg.author)
-            await self.add_fam_exp(users, msg.author, 1)
-            await self.fam_up(users, msg.author, msg)
-            self.writeFile(users)
+            await self.update_data(msg.author)
+            await self.add_fam_exp(msg.author, 1)
+            await self.fam_up(self.readFile(), msg.author, msg)
+            self.writeFile()
 
         if msg.channel.name == 'starboard' and msg.author.name == 'StarBot':
             user_mention = msg.embeds[0].fields[0].value
             user = discord.utils.get(msg.guild.members, mention=user_mention)
-            users = self.readFile()
-            await self.update_data(users, user)
-            await self.add_fam_exp(users, user, 5)
-            await self.fam_up(users, user, msg)
+            await self.update_data(user)
+            await self.add_fam_exp(user, 5)
+            await self.fam_up(self.readFile(), user, msg)
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if user == self.bot.user:
             return
         if reaction.emoji == discord.utils.get(reaction.message.guild.emojis, name='FAM'):
-            users = self.readFile()
-            await self.update_data(users, user)
-            await self.add_fam_exp(users, user, 3)
-            await self.fam_up(users, user, reaction.message)
-            self.writeFile(users)
+            await self.update_data(user)
+            await self.add_fam_exp(user, 3)
+            await self.fam_up(self.readFile(), user, reaction.message)
+            self.writeFile()
 
-    async def update_data(self, users, user):
+    async def update_data(self, user):
         if user.bot:
             return
+        
+        sql = """INSERT INTO fam
+            VALUES(%s, %s, %s, %s, %s, %s)
+            ON CONFLICT DO NOTHING
+        """
+        if user.name in famDict['isfam']:
+            cur.execute(sql, (user.id, user.name, 26, 3, True, rank_title[3]))
+        else:
+            cur.execute(sql, (user.id, user.name, 0, 1, False, rank_title[1]))
+        conn.commit()
 
-        if not f'{user.id}' in users:
-            users[f'{user.id}'] = {}
-            users[f'{user.id}']['name'] = user.name
-            if user.name in famDict['isfam']:
-                users[f'{user.id}']['experience'] = 26
-                users[f'{user.id}']['rank'] = 3
-                users[f'{user.id}']['is_fam'] = True
-                users[f'{user.id}']['title'] = rank_title[3]
-            else:
-                users[f'{user.id}']['experience'] = 0
-                users[f'{user.id}']['rank'] = 1
-                users[f'{user.id}']['is_fam'] = False
-                users[f'{user.id}']['title'] = rank_title[1]
-
-    async def add_fam_exp(self, users, user, exp):
+    async def add_fam_exp(self, user, exp):
         if user.bot:
             return
-        users[f'{user.id}']['experience'] += exp
+        sql = """
+            UPDATE fam SET experience = experience + %s WHERE id = %s
+        """
+        cur.execute(sql, (exp, str(user.id)))
+        conn.commit()
+        
 
     async def fam_up(self, users, user, msg):
         if user.bot:
@@ -113,15 +134,16 @@ class FamRankings(commands.Cog):
 
             # At rank 3, they get assigned the FAM status along with the rank up
             if rank_end >= 3 and users[f'{user.id}']['is_fam'] == False:
-                users[f'{user.id}']['is_fam'] = True
-                famDict['isfam'].append(user.name)
                 message += f'You have earned FAM status and the title of {rank_title[rank_end]}! Nice.'
             else:
                 message += f'You have earned the Fam title of "**{rank_title[rank_end]}**"! Nice.'
 
-            users[f'{user.id}']['rank'] = rank_end
-            users[f'{user.id}']['title'] = rank_title[rank_end]
-            users[f'{user.id}']['experience'] = 0
+            sql = """
+                UPDATE fam SET
+                    is_fam = %s >= 3, rank = %s, title = %s, experience = 0
+            """
+            cur.execute(sql, (rank_end, rank_end, rank_title[rank_end]))
+            conn.commit()
             await channel.send(message)
 
     @commands.command()
@@ -176,8 +198,8 @@ class FamRankings(commands.Cog):
         else:
             await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
-        await self.update_data(users, ctx.author)
-        self.writeFile(users)
+        await self.update_data(ctx.author)
+        self.writeFile()
 
         embed = discord.Embed(
             title=f'{ctx.author.display_name}',
@@ -218,9 +240,9 @@ class FamRankings(commands.Cog):
     async def whoisfam(self, ctx):
         print(f'{ctx.author} used f.whoisfam')
 
-        users = self.readFile()
 
-        await self.update_data(users, ctx.author)
+        await self.update_data(ctx.author)
+        users = self.readFile()
 
         embed = discord.Embed(
             title='Who Is Fam?',
