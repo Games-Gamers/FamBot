@@ -6,11 +6,11 @@ from discord.ext import commands
 import progressbar as pb
 from structs.responses import memes
 from structs.rankings import fam_by_rank, rank_title, famDict
-from config.settings import POSTGRES_PASSWORD
+from config.settings import POSTGRES_PASSWORD, POSTGRES_HOST
 
 filepath = 'structs/users.json'
 
-conn = psycopg2.connect(host="localhost", database="postgres", user="postgres", password=POSTGRES_PASSWORD)
+conn = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
 cur = conn.cursor()
 
 class FamRankings(commands.Cog):
