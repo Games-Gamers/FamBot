@@ -11,18 +11,20 @@ from config.settings import POSTGRES_PASSWORD, POSTGRES_HOST
 filepath = 'structs/users.json'
 
 conn = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
-cur = conn.cursor()
 
 class FamRankings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        cur = conn.cursor()
         cur.execute('SELECT version()')
         print('PostgreSQL database version:', cur.fetchone())
+        cur.close()
 
     def readFile(self):
         sql = """
             SELECT * FROM fam
         """
+        cur = conn.cursor()
         cur.execute(sql)
         users = {}
         row = cur.fetchone()
@@ -36,18 +38,20 @@ class FamRankings(commands.Cog):
                 "title": title
             }
             row = cur.fetchone()
+        cur.close()
         return users
 
     def writeFile(self):
         sql = """
             SELECT * FROM fam
         """
+        cur = conn.cursor()
         cur.execute(sql)
         print(cur.fetchall())
+        cur.close()
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        users = self.readFile()
         await self.update_data(member)
         self.writeFile()
 
@@ -98,11 +102,14 @@ class FamRankings(commands.Cog):
             VALUES(%s, %s, %s, %s, %s, %s)
             ON CONFLICT DO NOTHING
         """
+        
+        cur = conn.cursor()
         if user.name in famDict['isfam']:
             cur.execute(sql, (user.id, user.name, 26, 3, True, rank_title[3]))
         else:
             cur.execute(sql, (user.id, user.name, 0, 1, False, rank_title[1]))
         conn.commit()
+        cur.close()
 
     async def add_fam_exp(self, user, exp):
         if user.bot:
@@ -110,8 +117,10 @@ class FamRankings(commands.Cog):
         sql = """
             UPDATE fam SET experience = experience + %s WHERE id = %s
         """
+        cur = conn.cursor()
         cur.execute(sql, (exp, str(user.id)))
         conn.commit()
+        cur.close()
         
 
     async def fam_up(self, users, user, msg):
@@ -142,8 +151,10 @@ class FamRankings(commands.Cog):
                 UPDATE fam SET
                     is_fam = %s >= 3, rank = %s, title = %s, experience = 0
             """
+            cur = conn.cursor()
             cur.execute(sql, (rank_end, rank_end, rank_title[rank_end]))
             conn.commit()
+            cur.close()
             await channel.send(message)
 
     @commands.command()
@@ -242,7 +253,6 @@ class FamRankings(commands.Cog):
 
 
         await self.update_data(ctx.author)
-        users = self.readFile()
 
         embed = discord.Embed(
             title='Who Is Fam?',
