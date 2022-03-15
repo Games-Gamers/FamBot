@@ -21,14 +21,6 @@ class KeywordResponder(commands.Cog):
         if msg.author == self.bot.user:
             return
 
-        # hava nice day
-        if search(' hava ', msg.content) \
-            or msg.content.startswith('hava ') \
-            or msg.content.endswith(' hava') \
-            or msg.content == 'hava' \
-            and not msg.content.startswith("f."):
-            await msg.channel.send('hava nice day fam lmao gottem')
-
         # lmao gottem
         if 'gottem' in msg.content:
             await msg.channel.send(random.choice(gottems))
