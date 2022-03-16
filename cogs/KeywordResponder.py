@@ -26,11 +26,13 @@ class KeywordResponder(commands.Cog):
             or msg.content.startswith('hava ') \
             or msg.content.endswith(' hava') \
             or msg.content == 'hava' \
-            and not msg.content.startswith("f."):
+            and not msg.content.startswith("f.") \
+            and random.randint(1, 100) >= 90:
             await msg.channel.send('hava nice day fam lmao gottem')
 
         # lmao gottem
-        if 'gottem' in msg.content:
+        if 'gottem' in msg.content \
+            and random.randint(1, 100) >= 90:
             await msg.channel.send(random.choice(gottems))
 
         # butthole
