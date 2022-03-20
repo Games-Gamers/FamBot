@@ -20,7 +20,7 @@ class FamRankings(commands.Cog):
         print('PostgreSQL database version:', cur.fetchone())
         cur.close()
 
-    def readFile(self):
+    def readFile(self) -> dict:
         sql = """
             SELECT * FROM fam
         """
@@ -41,7 +41,7 @@ class FamRankings(commands.Cog):
         cur.close()
         return users
 
-    def writeFile(self):
+    def writeFile(self) -> None:
         sql = """
             SELECT * FROM fam
         """
@@ -56,7 +56,7 @@ class FamRankings(commands.Cog):
         self.writeFile()
 
     @commands.Cog.listener()
-    async def on_message(self, msg):
+    async def on_message(self, msg: discord.Message):
         """Message Responses
         - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
         - 'lmao gottem' responses
@@ -72,7 +72,7 @@ class FamRankings(commands.Cog):
             emoji = discord.utils.get(msg.guild.emojis, name='FAM')
             if emoji:
                 await msg.add_reaction(emoji)
-            await self.update_data(msg.author)
+            await self.update_data(self.readFile(), msg.author)
             await self.add_fam_exp(msg.author, 1)
             await self.fam_up(self.readFile(), msg.author, msg)
             self.writeFile()
@@ -80,7 +80,7 @@ class FamRankings(commands.Cog):
         if msg.channel.name == 'starboard' and msg.author.name == 'StarBot':
             user_mention = msg.embeds[0].fields[0].value
             user = discord.utils.get(msg.guild.members, mention=user_mention)
-            await self.update_data(user)
+            await self.update_data(self.readFile(), user)
             await self.add_fam_exp(user, 5)
             await self.fam_up(self.readFile(), user, msg)
 
@@ -89,13 +89,16 @@ class FamRankings(commands.Cog):
         if user == self.bot.user:
             return
         if reaction.emoji == discord.utils.get(reaction.message.guild.emojis, name='FAM'):
-            await self.update_data(user)
+            await self.update_data(self.readFile(), user)
             await self.add_fam_exp(user, 3)
             await self.fam_up(self.readFile(), user, reaction.message)
             self.writeFile()
 
-    async def update_data(self, user):
+    async def update_data(self, users: dict, user: discord.Member):
         if user.bot:
+            return
+        
+        if user.id in users:
             return
         
         sql = """INSERT INTO fam
