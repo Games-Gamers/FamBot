@@ -22,6 +22,12 @@ class FamRankings(commands.Cog):
         cur.close()
     
     def conn(self):
+        try:
+            self.connection = con
+            cur = self.connection.cursor()
+            cur.execute('SELECT version()')
+        except:
+            self.connection.close()
         if self.connection.closed != 0:
             print("connection closed, resetting")
             self.connection = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
