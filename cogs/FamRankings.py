@@ -10,21 +10,26 @@ from config.settings import POSTGRES_PASSWORD, POSTGRES_HOST
 
 filepath = 'structs/users.json'
 
-conn = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
+con = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
 
 class FamRankings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        cur = conn.cursor()
+        cur = self.conn().cursor()
         cur.execute('SELECT version()')
         print('PostgreSQL database version:', cur.fetchone())
         cur.close()
+    
+    def conn(self) -> psycopg2.connection:
+        if con.closed != 0:
+            con = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
+        return con
 
     def readFile(self) -> dict:
         sql = """
             SELECT * FROM fam
         """
-        cur = conn.cursor()
+        cur = self.conn().cursor()
         cur.execute(sql)
         users = {}
         row = cur.fetchone()
@@ -45,14 +50,14 @@ class FamRankings(commands.Cog):
         sql = """
             SELECT * FROM fam
         """
-        cur = conn.cursor()
+        cur = self.conn().cursor()
         cur.execute(sql)
         print(cur.fetchall())
         cur.close()
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        await self.update_data(member)
+        await self.update_data(self.readFile(), member)
         self.writeFile()
 
     @commands.Cog.listener()
@@ -106,7 +111,7 @@ class FamRankings(commands.Cog):
             ON CONFLICT DO NOTHING
         """
         
-        cur = conn.cursor()
+        cur = self.conn().cursor()
         if user.name in famDict['isfam']:
             cur.execute(sql, (user.id, user.name, 26, 3, True, rank_title[3]))
         else:
@@ -120,7 +125,7 @@ class FamRankings(commands.Cog):
         sql = """
             UPDATE fam SET experience = experience + %s WHERE id = %s
         """
-        cur = conn.cursor()
+        cur = self.conn().cursor()
         cur.execute(sql, (exp, str(user.id)))
         conn.commit()
         cur.close()
@@ -154,7 +159,7 @@ class FamRankings(commands.Cog):
                 UPDATE fam SET
                     is_fam = %s >= 3, rank = %s, title = %s, experience = 0
             """
-            cur = conn.cursor()
+            cur = self.conn().cursor()
             cur.execute(sql, (rank_end, rank_end, rank_title[rank_end]))
             conn.commit()
             cur.close()
@@ -212,7 +217,7 @@ class FamRankings(commands.Cog):
         else:
             await ctx.send('Hmm...that remains to be seen. You have potential. But I\'ll be the judge of that. Check back with me later.')
 
-        await self.update_data(ctx.author)
+        await self.update_data(self.readFile(), ctx.author)
         self.writeFile()
 
         embed = discord.Embed(
@@ -255,7 +260,7 @@ class FamRankings(commands.Cog):
         print(f'{ctx.author} used f.whoisfam')
 
 
-        await self.update_data(ctx.author)
+        await self.update_data(self.readFile(), ctx.author)
 
         embed = discord.Embed(
             title='Who Is Fam?',
@@ -265,7 +270,7 @@ class FamRankings(commands.Cog):
         for rank in range(1, 11, 1):
             embed.add_field(
                 name=rank_title[rank].upper(),
-                value=fam_by_rank(rank),
+                value=fam_by_rank(rank, self.readFile()),
                 inline=True
             )
 
