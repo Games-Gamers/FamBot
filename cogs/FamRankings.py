@@ -15,15 +15,17 @@ con = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres",
 class FamRankings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        cur = self.conn().cursor()
+        self.connection = con
+        cur = self.connection.cursor()
         cur.execute('SELECT version()')
         print('PostgreSQL database version:', cur.fetchone())
         cur.close()
     
-    def conn(self) -> psycopg2.connection:
-        if con.closed != 0:
-            con = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
-        return con
+    def conn(self):
+        if self.connection.closed != 0:
+            print("connection closed, resetting")
+            self.connection = psycopg2.connect(host=POSTGRES_HOST, database="postgres", user="postgres", password=POSTGRES_PASSWORD)
+        return self.connection
 
     def readFile(self) -> dict:
         sql = """
@@ -116,7 +118,7 @@ class FamRankings(commands.Cog):
             cur.execute(sql, (user.id, user.name, 26, 3, True, rank_title[3]))
         else:
             cur.execute(sql, (user.id, user.name, 0, 1, False, rank_title[1]))
-        conn.commit()
+        con.commit()
         cur.close()
 
     async def add_fam_exp(self, user, exp):
@@ -127,7 +129,7 @@ class FamRankings(commands.Cog):
         """
         cur = self.conn().cursor()
         cur.execute(sql, (exp, str(user.id)))
-        conn.commit()
+        con.commit()
         cur.close()
         
 
@@ -161,7 +163,7 @@ class FamRankings(commands.Cog):
             """
             cur = self.conn().cursor()
             cur.execute(sql, (rank_end, rank_end, rank_title[rank_end]))
-            conn.commit()
+            con.commit()
             cur.close()
             await channel.send(message)
 
