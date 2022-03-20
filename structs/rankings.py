@@ -30,11 +30,9 @@ famDict = {
     ]
 }
 
-def fam_by_rank(fam_rank):
+def fam_by_rank(fam_rank, users):
 
     fam = []
-    with open('structs/users.json', 'r') as f:
-        users = json.load(f)
 
     for user_id in users:
         if users[user_id]["rank"] == fam_rank:
