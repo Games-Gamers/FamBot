@@ -166,9 +166,10 @@ class FamRankings(commands.Cog):
             sql = """
                 UPDATE fam SET
                     is_fam = %s >= 3, rank = %s, title = %s, experience = 0
+                    where id = %s
             """
             cur = self.conn().cursor()
-            cur.execute(sql, (rank_end, rank_end, rank_title[rank_end]))
+            cur.execute(sql, (rank_end, rank_end, rank_title[rank_end], user.id))
             con.commit()
             cur.close()
             await channel.send(message)
