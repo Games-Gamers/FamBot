@@ -169,7 +169,7 @@ class FamRankings(commands.Cog):
                     where id = %s
             """
             cur = self.conn().cursor()
-            cur.execute(sql, (rank_end, rank_end, rank_title[rank_end], user.id))
+            cur.execute(sql, (rank_end, rank_end, rank_title[rank_end], f'{user.id}'))
             con.commit()
             cur.close()
             await channel.send(message)
