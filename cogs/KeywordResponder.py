@@ -43,8 +43,7 @@ class KeywordResponder(commands.Cog):
             await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
 
         # suh
-        if (search('suh', msg.content)) \
-            and random.randint(1, 100) > 90:
+        if (search('suh', msg.content)):
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
 
 
