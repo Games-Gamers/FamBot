@@ -22,17 +22,19 @@ class KeywordResponder(commands.Cog):
             return
 
         # hava nice day
-        if search(' hava ', msg.content) \
+        if (search(' hava ', msg.content) \
             or msg.content.startswith('hava ') \
             or msg.content.endswith(' hava') \
-            or msg.content == 'hava' \
+            or msg.content == 'hava') \
             and not msg.content.startswith("f.") \
             and random.randint(1, 100) >= 90:
+            print(f'responding to "hava" from {msg.author}')
             await msg.channel.send('hava nice day fam lmao gottem')
 
         # lmao gottem
         if 'gottem' in msg.content \
             and random.randint(1, 100) >= 90:
+            print(f'responding to "gottem" from {msg.author}')
             await msg.channel.send(random.choice(gottems))
 
         # butthole
@@ -40,10 +42,12 @@ class KeywordResponder(commands.Cog):
             or search('where is ', msg.content) \
             or search('where are ', msg.content)) \
             and random.randint(1, 100) >= 90:
+            print(f'responding to "looking for / where is / where are" from {msg.author}')
             await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
 
         # suh
         if (search('suh', msg.content)):
+            print(f'responding to "suh" from {msg.author}')
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
 
 

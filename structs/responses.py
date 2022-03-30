@@ -1,4 +1,4 @@
-memes = [
+sass = [
     'ur just fucking dying',
     'ur not fam',
     'u look like a bird',
@@ -56,4 +56,11 @@ gottems = [
     'https://giphy.com/gifs/TEcDhtKS2QPqE', #rekt announcer
     'https://giphy.com/gifs/savage-supa-hot-fire-super-xT9IgMw9fhuEGUaJqg', #supa hot savage
     'https://giphy.com/gifs/hyperrpg-burn-trollhunters-got-eem-lRoouslurnhcqn9Byb' #gamer got 'em
+]
+
+fams = [
+    'https://tenor.com/bfxG1.gif', # you don't turn your back on family
+    'https://tenor.com/bfyx7.gif', # I don't have friends, I have family
+    'https://tenor.com/bfwZJ.gif', # there's always room for family
+    'What are you doing step-fam?',
 ]

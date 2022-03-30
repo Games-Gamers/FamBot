@@ -4,7 +4,7 @@ from datetime import datetime as dt
 import discord
 from discord.ext import commands
 import progressbar as pb
-from structs.responses import memes
+from structs.responses import sass
 from structs.rankings import fam_by_rank, rank_title, famDict
 from config.settings import POSTGRES_PASSWORD, POSTGRES_HOST
 
