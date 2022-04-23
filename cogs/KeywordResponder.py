@@ -51,5 +51,5 @@ class KeywordResponder(commands.Cog):
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
 
 
-def setup(bot):
-	bot.add_cog(KeywordResponder(bot))
+async def setup(bot):
+	await bot.add_cog(KeywordResponder(bot))

@@ -284,7 +284,6 @@ class FamRankings(commands.Cog):
                 inline=True
             )
 
-        embed.set_footer(text=random.choice(memes))
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -313,5 +312,5 @@ class FamRankings(commands.Cog):
             await ctx.send('not yet, fam, but soon')
 
 
-def setup(bot):
-    bot.add_cog(FamRankings(bot))
+async def setup(bot):
+	await bot.add_cog(FamRankings(bot))

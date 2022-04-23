@@ -56,5 +56,5 @@ class Meme(commands.Cog):
         print(f'{ctx.author} used f.fam')
         await ctx.send(random.choice(sass))
 
-def setup(bot):
-	bot.add_cog(Meme(bot)) 
+async def setup(bot):
+	await bot.add_cog(Meme(bot)) 
