@@ -88,7 +88,7 @@ class PepTalk(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def pepTalk(self, ctx):
+    async def peptalk(self, ctx):
         message = random.choice(part1) + \
             "\n" + \
             random.choice(part2) + \
