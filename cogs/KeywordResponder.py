@@ -2,12 +2,29 @@ from discord.ext import commands
 import random
 from structs.responses import gottems
 from re import search
+from datetime import datetime
 
-
+drinked_fam = [
+    'bossanova#1337',
+    'Mulchbutler#5390',
+    'amatt#6812',
+    'Corpse Eye#0069',
+    'Cooler Guy Theoren#1597',
+    'The Mongoose#9414',
+    'ToeUp#8008',
+    'RuneCatCora#9833',
+    'The Dream#2457',
+    'shaggyzero#3303',
+    'Swegabyte#4151',
+    'Death(Lee)Hallows#9795',
+    'Jumper11550#7419',
+    'Llama Flow D#7971'
+]
 
 class KeywordResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.start = datetime.today().timestamp()
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -49,7 +66,24 @@ class KeywordResponder(commands.Cog):
         if (search('suh', msg.content)):
             print(f'responding to "suh" from {msg.author}')
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
-
-
+            
+        # get drinked sticker response
+        if len(msg.stickers) != 0:
+            for sticker in msg.stickers:
+                if 'drinked' in sticker.name.lower() \
+                    and random.randint(1, 100) >= 60:
+                    await msg.channel.send('IDIOT GOT DRINKED')
+        
+        # get drinked sticker post
+        if msg.author.name in drinked_fam \
+            and random.randint(1, 100) >= 90 \
+            and datetime.today().timestamp() - self.start > 21600.0:
+            # posts sticker if its been at least 6 hours since last trigger
+            stkr_drinked = self.bot.get_sticker(974028812838895726)
+            await msg.channel.send(stickers=[stkr_drinked])
+            if random.randint(1, 10) >= 5:
+                await msg.channel.send("get drinked idiot")
+            self.start = datetime.today().timestamp()
+        
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
