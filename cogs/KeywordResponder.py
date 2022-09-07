@@ -68,10 +68,10 @@ class KeywordResponder(commands.Cog):
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
             
         # get drinked sticker response
-        if len(msg.stickers) != 0 \
-            and random.randint(1, 100) >= 60:
+        if len(msg.stickers) != 0:
             for sticker in msg.stickers:
-                if 'drinked' in sticker.name.lower():
+                if 'drinked' in sticker.name.lower() \
+                    and random.randint(1, 100) >= 60:
                     await msg.channel.send('IDIOT GOT DRINKED')
         
         # get drinked sticker post
