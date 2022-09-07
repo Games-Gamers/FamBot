@@ -49,6 +49,18 @@ class KeywordResponder(commands.Cog):
         if (search('suh', msg.content)):
             print(f'responding to "suh" from {msg.author}')
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
+        
+        # get drinked
+        if (search('drink me', msg.content)):
+            print(f'responding with get drinked to {msg.author}')
+            drinked = commands.Bot.get_sticker(self, 974028812838895726)
+            # await msg.channel.send(commands.Bot.get_sticker(self, 974028812838895726))
+            await msg.channel.send(drinked)
+        if len(msg.stickers) != 0:
+            for sticker in msg.stickers:
+                if 'drinked' in sticker.name.lower():
+                    await msg.channel.send('IDIOT GOT DRINKED')
+                
 
 
 async def setup(bot):
