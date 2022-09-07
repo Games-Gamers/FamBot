@@ -1,4 +1,4 @@
-git+https://github.com/Rapptz/discord.py@cb587f6#
+discord.py~=2.0.1
 python-dotenv~=0.19.0
 pillow~=8.4.0 
 psycopg2-binary==2.9.3
