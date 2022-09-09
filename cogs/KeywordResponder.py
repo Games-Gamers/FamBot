@@ -34,36 +34,54 @@ class KeywordResponder(commands.Cog):
         Args:
             msg (Message): Discord Message object
         """
-        msg.content = msg.content.lower()
+        
+        # 
+        
         if msg.author == self.bot.user:
             return
+        
+        # fire emblem three houses
+        fe3h_meme = ['Fire', 'Emblem', 'Three', 'Houses', 'Three Houses']
+        if (search(r"(?:\b[A-Z]{3,4}\b)+", msg.content)) \
+            and random.randint(1, 100) >= 80:
+            fe3h_msg = []
+            fe3h = search(r'(?:\b[A-Z]{3,4}\b)+', msg.content)
+            for x, letter in enumerate(fe3h.group(0)):
+                if len(fe3h.group(0)) == 3 and x == 2:
+                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
+                    break
+                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
+            await msg.channel.send("\n".join(fe3h_msg))
+            
+        # lower case message content for remaining keywords
+        content = msg.content.lower()
 
         # hava nice day
-        if (search(' hava ', msg.content) \
-            or msg.content.startswith('hava ') \
-            or msg.content.endswith(' hava') \
-            or msg.content == 'hava') \
-            and not msg.content.startswith("f.") \
+        if (search(' hava ', content) \
+            or content.startswith('hava ') \
+            or content.endswith(' hava') \
+            or content == 'hava') \
+            and not content.startswith("f.") \
             and random.randint(1, 100) >= 90:
             print(f'responding to "hava" from {msg.author}')
             await msg.channel.send('hava nice day fam lmao gottem')
 
         # lmao gottem
-        if 'gottem' in msg.content \
+        if 'gottem' in content \
             and random.randint(1, 100) >= 90:
             print(f'responding to "gottem" from {msg.author}')
             await msg.channel.send(random.choice(gottems))
 
         # butthole
-        if (search('looking for ', msg.content) \
-            or search('where is ', msg.content) \
-            or search('where are ', msg.content)) \
+        if (search('looking for ', content) \
+            or search('where is ', content) \
+            or search('where are ', content)) \
             and random.randint(1, 100) >= 90:
             print(f'responding to "looking for / where is / where are" from {msg.author}')
             await msg.channel.send('https://c.tenor.com/hmwml17QnQ8AAAAC/tom-cardy-butthole.gif')
 
         # suh
-        if (search('suh', msg.content)):
+        if (search('suh', content)):
             print(f'responding to "suh" from {msg.author}')
             await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
             
@@ -84,6 +102,18 @@ class KeywordResponder(commands.Cog):
             if random.randint(1, 10) >= 5:
                 await msg.channel.send("get drinked idiot")
             self.start = datetime.today().timestamp()
+            
+        
+
+            #     await msg.channel.send(f'{fe3h[1]} - Emblem')
+            #     await msg.channel.send(f'{fe3h[2]} - Three Houses')
+            # else:
+            #     await msg.channel.send(f'{letter} - Fire')
+            #     await msg.channel.send(f'{letter} - Emblem')
+            #     await msg.channel.send(f'{letter} - Three')
+            #     await msg.channel.send(f'{letter} - Houses')
+            # # await msg.channel.send()
+
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
