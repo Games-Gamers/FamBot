@@ -235,7 +235,7 @@ class FamRankings(commands.Cog):
             description='How fam are you?',
             color=discord.Color.blue()
         )
-        embed.set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_thumbnail(url=ctx.author.display_avatar)
         if users[f'{ctx.author.id}']['is_fam'] or ctx.author.name in famDict['isfam']:
             embed.add_field(
                 name='FAM?',
