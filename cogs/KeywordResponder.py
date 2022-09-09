@@ -35,8 +35,6 @@ class KeywordResponder(commands.Cog):
             msg (Message): Discord Message object
         """
         
-        # 
-        
         if msg.author == self.bot.user:
             return
         
@@ -102,18 +100,6 @@ class KeywordResponder(commands.Cog):
             if random.randint(1, 10) >= 5:
                 await msg.channel.send("get drinked idiot")
             self.start = datetime.today().timestamp()
-            
-        
-
-            #     await msg.channel.send(f'{fe3h[1]} - Emblem')
-            #     await msg.channel.send(f'{fe3h[2]} - Three Houses')
-            # else:
-            #     await msg.channel.send(f'{letter} - Fire')
-            #     await msg.channel.send(f'{letter} - Emblem')
-            #     await msg.channel.send(f'{letter} - Three')
-            #     await msg.channel.send(f'{letter} - Houses')
-            # # await msg.channel.send()
-
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
