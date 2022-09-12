@@ -58,6 +58,7 @@ class KeywordResponder(commands.Cog):
         - Get Drinked sticker post and sticker post reponse
         - Hava Nice Day meme response to "hava" in message
         - HYCYBH gif reponse to "where is/are" or "looking for" in msg
+        - Manifesting response to matt's candle manifesting messages
         Args:
             msg (Message): Discord Message object
         """
