@@ -26,6 +26,25 @@ class KeywordResponder(commands.Cog):
         self.bot = bot
         self.fe3h_cd = datetime.today().timestamp()
         self.drinked_cd = datetime.today().timestamp()
+        
+    @commands.command()
+    @commands.has_any_role('admins', 'moderators')
+    async def cds(self, msg):
+        """Check Response Cooldowns
+        - only callable by admins and moderators
+        - posts current status of the response cooldowns
+        Args:
+            none
+        """
+        now = datetime.today().timestamp()
+        if now - self.fe3h_cd < 7200.0:
+            await msg.channel.send(f'{round(7200 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
+        else:
+            await msg.channe.send('fe3h cooldown passed!')
+        if now - self.drinked_cd < 21600:
+            await msg.channel.send(f'{round(21600.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
+        else:
+            await msg.channe.send('drinked cooldown passed!')
 
     @commands.Cog.listener()
     async def on_message(self, msg):
