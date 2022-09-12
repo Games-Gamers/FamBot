@@ -24,7 +24,8 @@ drinked_fam = [
 class KeywordResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.start = datetime.today().timestamp()
+        self.fe3h_cd = datetime.today().timestamp()
+        self.drinked_cd = datetime.today().timestamp()
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -40,17 +41,30 @@ class KeywordResponder(commands.Cog):
         
         # fire emblem three houses
         fe3h_meme = ['Fire', 'Emblem', 'Three', 'Houses', 'Three Houses']
-        if (search(r"(?:\b[A-Z]{3,4}\b)+", msg.content)) \
-            and random.randint(1, 100) >= 80:
-            fe3h_msg = []
+        # regex = all caps word, 3-4 letters
+        if (search(r"(?:\b[A-Z]{3,4}\b)+", msg.content)):
             fe3h = search(r'(?:\b[A-Z]{3,4}\b)+', msg.content)
-            for x, letter in enumerate(fe3h.group(0)):
-                if len(fe3h.group(0)) == 3 and x == 2:
-                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
-                    break
-                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
-            await msg.channel.send("\n".join(fe3h_msg))
-            
+            fe3h_msg = []
+            # post every time if immediately followed by a '?'
+            if (search(r'(?:\b[A-Z]{3,4}\?)+', msg.content)):
+                for x, letter in enumerate(fe3h.group(0)):
+                    if len(fe3h.group(0)) == 3 and x == 2:
+                        fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
+                        break
+                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
+                await msg.channel.send("\n".join(fe3h_msg))
+            # post if 20% chance, 3-4 characters, 2h cooldown
+            elif random.randint(1, 100) >= 80 \
+                and datetime.today().timestamp() - self.fe3h_cd > 7200:
+                for x, letter in enumerate(fe3h.group(0)):
+                    if len(fe3h.group(0)) == 3 and x == 2:
+                        fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
+                        break
+                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
+                await msg.channel.send("\n".join(fe3h_msg))
+                # restart cooldown
+                self.fe3h_cd = datetime.today().timestamp()
+
         # lower case message content for remaining keywords
         content = msg.content.lower()
 
@@ -93,13 +107,13 @@ class KeywordResponder(commands.Cog):
         # get drinked sticker post
         if msg.author.name in drinked_fam \
             and random.randint(1, 100) >= 90 \
-            and datetime.today().timestamp() - self.start > 21600.0:
+            and datetime.today().timestamp() - self.drinked_cd > 21600.0:
             # posts sticker if its been at least 6 hours since last trigger
             stkr_drinked = self.bot.get_sticker(974028812838895726)
             await msg.channel.send(stickers=[stkr_drinked])
             if random.randint(1, 10) >= 5:
                 await msg.channel.send("get drinked idiot")
-            self.start = datetime.today().timestamp()
+            self.drinked_cd = datetime.today().timestamp()
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
