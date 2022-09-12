@@ -5,20 +5,20 @@ from re import search
 from datetime import datetime
 
 drinked_fam = [
-    'bossanova#1337',
-    'Mulchbutler#5390',
-    'amatt#6812',
-    'Corpse Eye#0069',
-    'Cooler Guy Theoren#1597',
-    'The Mongoose#9414',
-    'ToeUp#8008',
-    'RuneCatCora#9833',
-    'The Dream#2457',
-    'shaggyzero#3303',
-    'Swegabyte#4151',
-    'Death(Lee)Hallows#9795',
-    'Jumper11550#7419',
-    'Llama Flow D#7971'
+    'bossanova',
+    'Mulchbutler',
+    'amatt',
+    'Corpse Eye',
+    'Cooler Guy Theoren',
+    'The Mongoose',
+    'ToeUp',
+    'RuneCatCora',
+    'The Dream',
+    'shaggyzero',
+    'Swegabyte',
+    'Death(Lee)Hallows',
+    'Jumper11550',
+    'Llama Flow D'
 ]
 
 class KeywordResponder(commands.Cog):
@@ -26,12 +26,35 @@ class KeywordResponder(commands.Cog):
         self.bot = bot
         self.fe3h_cd = datetime.today().timestamp()
         self.drinked_cd = datetime.today().timestamp()
+        
+    @commands.command()
+    @commands.has_any_role('admins', 'moderators')
+    async def cds(self, msg):
+        """Check Response Cooldowns
+        - only callable by admins and moderators
+        - posts current status of the response cooldowns
+        Args:
+            none
+        """
+        now = datetime.today().timestamp()
+        if now - self.fe3h_cd < 7200.0:
+            await msg.channel.send(f'{round(7200 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
+        else:
+            await msg.channe.send('fe3h cooldown passed!')
+        if now - self.drinked_cd < 21600:
+            await msg.channel.send(f'{round(21600.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
+        else:
+            await msg.channe.send('drinked cooldown passed!')
 
     @commands.Cog.listener()
     async def on_message(self, msg):
         """Message Responses
         - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
-        - 'lmao gottem' responses
+        - 'lmao gottem' responses to "gottem" in msg
+        - Fire Emblem Three Houses meme response to all caps acronym/words
+        - Get Drinked sticker post and sticker post reponse
+        - Hava Nice Day meme response to "hava" in message
+        - HYCYBH gif reponse to "where is/are" or "looking for" in msg
         Args:
             msg (Message): Discord Message object
         """
@@ -105,7 +128,7 @@ class KeywordResponder(commands.Cog):
                     await msg.channel.send('IDIOT GOT DRINKED')
         
         # get drinked sticker post
-        if msg.author.name in drinked_fam \
+        if msg.author in drinked_fam \
             and random.randint(1, 100) >= 90 \
             and datetime.today().timestamp() - self.drinked_cd > 21600.0:
             # posts sticker if its been at least 6 hours since last trigger
