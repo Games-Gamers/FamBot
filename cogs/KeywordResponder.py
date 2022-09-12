@@ -50,7 +50,11 @@ class KeywordResponder(commands.Cog):
     async def on_message(self, msg):
         """Message Responses
         - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
-        - 'lmao gottem' responses
+        - 'lmao gottem' responses to "gottem" in msg
+        - Fire Emblem Three Houses meme response to all caps acronym/words
+        - Get Drinked sticker post and sticker post reponse
+        - Hava Nice Day meme response to "hava" in message
+        - HYCYBH gif reponse to "where is/are" or "looking for" in msg
         Args:
             msg (Message): Discord Message object
         """
