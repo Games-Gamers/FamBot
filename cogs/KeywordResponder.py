@@ -45,9 +45,9 @@ class KeywordResponder(commands.Cog):
         else:
             await msg.channe.send('fe3h cooldown passed!')
         if now - self.drinked_cd < 21600:
-            await msg.channel.send(f'{round(21600.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
+            await msg.channel.send(f'{round(14400.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
         else:
-            await msg.channe.send('drinked cooldown passed!')
+            await msg.channel.send('drinked cooldown passed!')
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
@@ -134,7 +134,7 @@ class KeywordResponder(commands.Cog):
         # get drinked sticker post
         if msg.author.name in drinked_fam \
             and random.randint(1, 100) >= 90 \
-            and datetime.today().timestamp() - self.drinked_cd > 21600.0:
+            and datetime.today().timestamp() - self.drinked_cd > 14400.0:
             # posts sticker if its been at least 6 hours since last trigger
             stkr_drinked = self.bot.get_sticker(974028812838895726)
             await msg.channel.send(stickers=[stkr_drinked])
