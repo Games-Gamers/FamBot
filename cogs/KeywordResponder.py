@@ -1,8 +1,10 @@
+import discord
 from discord.ext import commands
 import random
 from structs.responses import gottems
 from re import search
 from datetime import datetime
+from structs.responses import blowing
 
 drinked_fam = [
     'bossanova',
@@ -18,7 +20,8 @@ drinked_fam = [
     'Swegabyte',
     'Death(Lee)Hallows',
     'Jumper11550',
-    'Llama Flow D'
+    'Llama Flow D',
+    'Pizza Brat'
 ]
 
 class KeywordResponder(commands.Cog):
@@ -29,7 +32,7 @@ class KeywordResponder(commands.Cog):
         
     @commands.command()
     @commands.has_any_role('admins', 'moderators')
-    async def cds(self, msg):
+    async def cds(self, msg: discord.Message):
         """Check Response Cooldowns
         - only callable by admins and moderators
         - posts current status of the response cooldowns
@@ -47,7 +50,7 @@ class KeywordResponder(commands.Cog):
             await msg.channe.send('drinked cooldown passed!')
 
     @commands.Cog.listener()
-    async def on_message(self, msg):
+    async def on_message(self, msg: discord.Message):
         """Message Responses
         - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
         - 'lmao gottem' responses to "gottem" in msg
@@ -55,6 +58,7 @@ class KeywordResponder(commands.Cog):
         - Get Drinked sticker post and sticker post reponse
         - Hava Nice Day meme response to "hava" in message
         - HYCYBH gif reponse to "where is/are" or "looking for" in msg
+        - Manifesting response to matt's candle manifesting messages
         Args:
             msg (Message): Discord Message object
         """
@@ -128,7 +132,7 @@ class KeywordResponder(commands.Cog):
                     await msg.channel.send('IDIOT GOT DRINKED')
         
         # get drinked sticker post
-        if msg.author in drinked_fam \
+        if msg.author.name in drinked_fam \
             and random.randint(1, 100) >= 90 \
             and datetime.today().timestamp() - self.drinked_cd > 21600.0:
             # posts sticker if its been at least 6 hours since last trigger
@@ -137,6 +141,23 @@ class KeywordResponder(commands.Cog):
             if random.randint(1, 10) >= 5:
                 await msg.channel.send("get drinked idiot")
             self.drinked_cd = datetime.today().timestamp()
+            
+        # blow out matt's candles
+        if msg.author.name == 'amatt' \
+            and "🕯️" in content:
+            r = random.randint(1, 100)
+            if r >= 66:
+                print("reacting with emoji")
+                await msg.add_reaction("🌬️")
+                await msg.add_reaction("🕯️")
+            elif r >= 33:
+                #candle blowing gifs
+                await msg.reply(random.choice(blowing))
+            else:
+                print("sending emoji")
+                await msg.reply(":wind_blowing_face: :candle:")
+                
+            
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))

@@ -64,3 +64,10 @@ fams = [
     'https://tenor.com/bfwZJ.gif', # there's always room for family
     'What are you doing step-fam?',
 ]
+
+blowing = [
+    'https://media.giphy.com/media/IbaPeILJxAww41znV9/giphy.gif',
+    'https://media.giphy.com/media/3og0IO3c8KZLCAc7ao/giphy.gif',
+    'https://media.giphy.com/media/MnUF7vn3C92VO/giphy.gif',
+    'https://media.giphy.com/media/cePLKiPL78x6om55tW/giphy.gif', 
+]
