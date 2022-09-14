@@ -298,7 +298,7 @@ class FamRankings(commands.Cog):
                         and v_chan.name not in fam_channels:
                     fam_channels.append(v_chan.name)
 
-        if dt.now().hour > 21 or dt.now().hour < 3:
+        if dt.now().hour >= 21 or dt.now().hour < 3:
             await ctx.send('it\'s that time of night, fam')
             if len(fam_channels) == 1:
                 await ctx.send(f'We famming in **#{fam_channels[0]}** right now')
