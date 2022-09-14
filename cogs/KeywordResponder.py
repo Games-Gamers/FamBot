@@ -40,12 +40,12 @@ class KeywordResponder(commands.Cog):
             none
         """
         now = datetime.today().timestamp()
-        if now - self.fe3h_cd < 7200.0:
-            await msg.channel.send(f'{round(7200 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
+        if now - self.fe3h_cd < 21600.0:
+            await msg.channel.send(f'{round(21600 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
         else:
             await msg.channe.send('fe3h cooldown passed!')
         if now - self.drinked_cd < 21600:
-            await msg.channel.send(f'{round(14400.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
+            await msg.channel.send(f'{round(21600.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
         else:
             await msg.channel.send('drinked cooldown passed!')
 
@@ -82,7 +82,7 @@ class KeywordResponder(commands.Cog):
                 await msg.channel.send("\n".join(fe3h_msg))
             # post if 20% chance, 3-4 characters, 2h cooldown
             elif random.randint(1, 100) >= 80 \
-                and datetime.today().timestamp() - self.fe3h_cd > 7200:
+                and datetime.today().timestamp() - self.fe3h_cd > 21600:
                 for x, letter in enumerate(fe3h.group(0)):
                     if len(fe3h.group(0)) == 3 and x == 2:
                         fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
@@ -134,7 +134,7 @@ class KeywordResponder(commands.Cog):
         # get drinked sticker post
         if msg.author.name in drinked_fam \
             and random.randint(1, 100) >= 90 \
-            and datetime.today().timestamp() - self.drinked_cd > 14400.0:
+            and datetime.today().timestamp() - self.drinked_cd > 21600.0:
             # posts sticker if its been at least 6 hours since last trigger
             stkr_drinked = self.bot.get_sticker(974028812838895726)
             await msg.channel.send(stickers=[stkr_drinked])
@@ -156,8 +156,6 @@ class KeywordResponder(commands.Cog):
             else:
                 print("sending emoji")
                 await msg.reply(":wind_blowing_face: :candle:")
-                
-            
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
