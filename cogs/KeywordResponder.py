@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import random
 from structs.responses import gottems
-from re import search
+from re import search, findall
 from datetime import datetime
 from structs.responses import blowing
 
@@ -68,29 +68,31 @@ class KeywordResponder(commands.Cog):
         
         # fire emblem three houses
         fe3h_meme = ['Fire', 'Emblem', 'Three', 'Houses', 'Three Houses']
-        # regex = all caps word, 3-4 letters
-        if (search(r"(?:\b[A-Z]{3,4}\b)+", msg.content)):
-            fe3h = search(r'(?:\b[A-Z]{3,4}\b)+', msg.content)
-            fe3h_msg = []
-            # post every time if immediately followed by a '?'
-            if (search(r'(?:\b[A-Z]{3,4}\?)+', msg.content)):
-                for x, letter in enumerate(fe3h.group(0)):
-                    if len(fe3h.group(0)) == 3 and x == 2:
-                        fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
-                        break
-                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
-                await msg.channel.send("\n".join(fe3h_msg))
-            # post if 20% chance, 3-4 characters, 2h cooldown
-            elif random.randint(1, 100) >= 80 \
-                and datetime.today().timestamp() - self.fe3h_cd > 21600:
-                for x, letter in enumerate(fe3h.group(0)):
-                    if len(fe3h.group(0)) == 3 and x == 2:
-                        fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
-                        break
-                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
-                await msg.channel.send("\n".join(fe3h_msg))
-                # restart cooldown
-                self.fe3h_cd = datetime.today().timestamp()
+        fe3h_msg = []
+        # post every time if immediately followed by a '?'
+        if search(r'(?:\b[A-Z]{3,4}\?)+', msg.content):
+            fe3h_q = search(r'(?:\b[A-Z]{3,4}\?)+', msg.content)
+            fe3h_q = fe3h_q[0].strip("?")
+            for x, letter in enumerate(fe3h_q):
+                if len(fe3h_q) == 3 and x == 2:
+                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
+                    break
+                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
+            await msg.channel.send("\n".join(fe3h_msg))
+        # post 20%, 3-4 chars, 2h cooldown, ignores multi, not full caps
+        elif random.randint(1, 100) >= 80 \
+            and datetime.today().timestamp() - self.fe3h_cd > 21600 \
+            and len(fe3h) == 1 \
+            and not msg.content.isupper():
+            fe3h =  findall(r'(?:\b[A-Z]{3,4}\b)+', msg.content)
+            for x, letter in enumerate(fe3h.group(0)):
+                if len(fe3h.group(0)) == 3 and x == 2:
+                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
+                    break
+                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
+            await msg.channel.send("\n".join(fe3h_msg))
+            # restart cooldown
+            self.fe3h_cd = datetime.today().timestamp()
 
         # lower case message content for remaining keywords
         content = msg.content.lower()
