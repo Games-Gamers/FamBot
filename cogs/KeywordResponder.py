@@ -43,7 +43,7 @@ class KeywordResponder(commands.Cog):
         if now - self.fe3h_cd < 21600.0:
             await msg.channel.send(f'{round(21600 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
         else:
-            await msg.channe.send('fe3h cooldown passed!')
+            await msg.channel.send('fe3h cooldown passed!')
         if now - self.drinked_cd < 21600:
             await msg.channel.send(f'{round(21600.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
         else:
