@@ -20,14 +20,12 @@ drinked_fam = [
     'Swegabyte',
     'Death(Lee)Hallows',
     'Jumper11550',
-    'Llama Flow D',
     'Pizza Brat'
 ]
 
 class KeywordResponder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.fe3h_cd = datetime.today().timestamp()
         self.drinked_cd = datetime.today().timestamp()
         
     @commands.command()
@@ -40,12 +38,8 @@ class KeywordResponder(commands.Cog):
             none
         """
         now = datetime.today().timestamp()
-        if now - self.fe3h_cd < 21600.0:
-            await msg.channel.send(f'{round(21600.0 - (now - self.fe3h_cd), 2)} seconds left on fe3h cooldown')
-        else:
-            await msg.channel.send('fe3h cooldown passed!')
-        if now - self.drinked_cd < 115200.0:
-            await msg.channel.send(f'{round(115200.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
+        if now - self.drinked_cd < 324000.0:
+            await msg.channel.send(f'{round(324000.0 - (now - self.drinked_cd), 2)} seconds left on drinked cooldown')
         else:
             await msg.channel.send('drinked cooldown passed!')
 
@@ -54,7 +48,6 @@ class KeywordResponder(commands.Cog):
         """Message Responses
         - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
         - 'lmao gottem' responses to "gottem" in msg
-        - Fire Emblem Three Houses meme response to all caps acronym/words
         - Get Drinked sticker post and sticker post reponse
         - Hava Nice Day meme response to "hava" in message
         - HYCYBH gif reponse to "where is/are" or "looking for" in msg
@@ -65,34 +58,6 @@ class KeywordResponder(commands.Cog):
         
         if msg.author == self.bot.user:
             return
-        
-        # fire emblem three houses
-        fe3h_meme = ['Fire', 'Emblem', 'Three', 'Houses', 'Three Houses']
-        fe3h_msg = []
-        # post every time if immediately followed by a '?'
-        if search(r'(?:\b[A-Z]{3,4}\?)+', msg.content):
-            fe3h_q = search(r'(?:\b[A-Z]{3,4}\?)+', msg.content)
-            fe3h_q = fe3h_q[0].strip("?")
-            for x, letter in enumerate(fe3h_q):
-                if len(fe3h_q) == 3 and x == 2:
-                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
-                    break
-                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
-            await msg.channel.send("\n".join(fe3h_msg))
-        # post 20%, 3-4 chars, 2h cooldown, ignores multi, not full caps
-        elif random.randint(1, 100) >= 80 \
-            and datetime.today().timestamp() - self.fe3h_cd > 21600 \
-            and len(fe3h) == 1 \
-            and not msg.content.isupper():
-            fe3h =  findall(r'(?:\b[A-Z]{3,4}\b)+', msg.content)
-            for x, letter in enumerate(fe3h.group(0)):
-                if len(fe3h.group(0)) == 3 and x == 2:
-                    fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[4]))
-                    break
-                fe3h_msg.append('{} - {}'.format(letter, fe3h_meme[x]))
-            await msg.channel.send("\n".join(fe3h_msg))
-            # restart cooldown
-            self.fe3h_cd = datetime.today().timestamp()
 
         # lower case message content for remaining keywords
         content = msg.content.lower()
@@ -136,7 +101,7 @@ class KeywordResponder(commands.Cog):
         # get drinked sticker post
         if msg.author.name in drinked_fam \
             and random.randint(1, 100) >= 90 \
-            and datetime.today().timestamp() - self.drinked_cd > 115200.0:
+            and datetime.today().timestamp() - self.drinked_cd > 324000.0:
             # posts sticker if its been at least 6 hours since last trigger
             stkr_drinked = self.bot.get_sticker(974028812838895726)
             await msg.channel.send(stickers=[stkr_drinked])
