@@ -1,5 +1,4 @@
 import psycopg2
-import random
 from datetime import datetime as dt
 import discord
 from discord.ext import commands
@@ -176,42 +175,6 @@ class FamRankings(commands.Cog):
             await channel.send(message)
 
     @commands.command()
-    async def help(self, ctx):
-        print(f'{ctx.author} used f.help')
-        embed = discord.Embed(
-            title='Bot Commands',
-            description='You looking for help, fam? Have you checked your butthole?',
-            color=discord.Color.blue()
-        )
-        embed.set_thumbnail(url="https://emoji.gg/assets/emoji/8947_FAM.png")
-        embed.add_field(
-            name='f.fam',
-            value='FAM',
-            inline=True
-        )
-        embed.add_field(
-            name='f.help',
-            value='Did it hurt?',
-            inline=True
-        )
-        embed.add_field(
-            name='f.amifam',
-            value='ur not fam',
-            inline=True
-        )
-        embed.add_field(
-            name='f.time',
-            value='that time of night?',
-            inline=True
-        )
-        embed.add_field(
-            name='f.meme',
-            value='meme copypasta',
-            inline=True
-        )
-        await ctx.send(embed=embed)
-
-    @commands.command()
     async def amifam(self, ctx):
         """
         TODO: fam 'rank' based on how many times they've said 'fam' or used :FAM: on the server
@@ -285,32 +248,6 @@ class FamRankings(commands.Cog):
             )
 
         await ctx.send(embed=embed)
-
-    @commands.command()
-    async def time(self, ctx):
-        print(f'{ctx.author} used f.time')
-        fam_channels = []
-        v_channels = ctx.guild.voice_channels
-
-        for v_chan in v_channels:
-            for user in v_chan.members:
-                if any(user.name in fam for fam in famDict['isfam']) \
-                        and v_chan.name not in fam_channels:
-                    fam_channels.append(v_chan.name)
-
-        if dt.now().hour > 21 or dt.now().hour < 3:
-            await ctx.send('it\'s that time of night, fam')
-            if len(fam_channels) == 1:
-                await ctx.send(f'We famming in **#{fam_channels[0]}** right now')
-            elif len(fam_channels) == 2:
-                await ctx.send(f'We famming in **BOTH #{fam_channels[0]} _and_ #{fam_channels[1]}!**')
-            elif len(fam_channels) == 3:
-                await ctx.send(f'Yo! We famming in ***ALL*** voice channels! Fuck yea, fam')
-        elif fam_channels:
-            await ctx.send('normally, not yet, but I see some fam in VCs now! It\'s that time of night _somewhere_, right?')
-        else:
-            await ctx.send('not yet, fam, but soon')
-
 
 async def setup(bot):
 	await bot.add_cog(FamRankings(bot))
