@@ -97,17 +97,6 @@ class KeywordResponder(commands.Cog):
                 if 'drinked' in sticker.name.lower() \
                     and random.randint(1, 100) >= 60:
                     await msg.channel.send('IDIOT GOT DRINKED')
-        
-        # get drinked sticker post
-        if msg.author.name in drinked_fam \
-            and random.randint(1, 100) >= 90 \
-            and datetime.today().timestamp() - self.drinked_cd > 324000.0:
-            # posts sticker if its been at least 6 hours since last trigger
-            stkr_drinked = self.bot.get_sticker(974028812838895726)
-            await msg.channel.send(stickers=[stkr_drinked])
-            if random.randint(1, 10) >= 5:
-                await msg.channel.send("get drinked idiot")
-            self.drinked_cd = datetime.today().timestamp()
             
         # blow out matt's candles
         if msg.author.name == 'amatt' \
