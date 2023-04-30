@@ -101,17 +101,19 @@ class KeywordResponder(commands.Cog):
         # blow out matt's candles
         if msg.author.name == 'amatt' \
             and "🕯️" in content:
-            r = random.randint(1, 100)
-            if r >= 66:
-                print("reacting with emoji")
-                await msg.add_reaction("🌬️")
-                await msg.add_reaction("🕯️")
-            elif r >= 33:
-                #candle blowing gifs
-                await msg.reply(random.choice(blowing))
-            else:
-                print("sending emoji")
-                await msg.reply(":wind_blowing_face: :candle:")
+            # uwu ex dee
+            await msg.reply("uwu :3")
+            # r = random.randint(1, 100)
+            # if r >= 66:
+            #     print("reacting with emoji")
+            #     await msg.add_reaction("🌬️")
+            #     await msg.add_reaction("🕯️")
+            # elif r >= 33:
+            #     #candle blowing gifs
+            #     await msg.reply(random.choice(blowing))
+            # else:
+            #     print("sending emoji")
+            #     await msg.reply(":wind_blowing_face: :candle:")
         
 async def setup(bot):
 	await bot.add_cog(KeywordResponder(bot))
