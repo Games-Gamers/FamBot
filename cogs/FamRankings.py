@@ -76,12 +76,12 @@ class FamRankings(commands.Cog):
         Args:
             msg (Message): Discord Message object
         """
-        msg.content = msg.content.lower()
+        content = msg.content.lower()
         if msg.author == self.bot.user:
             return
 
         # fam react, but we don't want to react to f.fam
-        if 'fam' in msg.content and not msg.content.startswith(self.bot.command_prefix):
+        if 'fam' in content and not content.startswith(self.bot.command_prefix):
             emoji = discord.utils.get(msg.guild.emojis, name='FAM')
             if emoji:
                 await msg.add_reaction(emoji)

@@ -29,3 +29,10 @@ jobs:
       uses: docker/setup-buildx-action@v1
     - name: Build and Push the Docker image
       run: docker buildx build --push --platform linux/arm/v7 -t mulchbutler/fambot .
+      
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@0.3.2
+      with:
+        args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
