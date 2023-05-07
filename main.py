@@ -29,7 +29,7 @@ async def on_command_error(ctx, error):
     await chan.send(f'yo...so...my moves were kinda weak in {ctx.message.jump_url}\n{error}')
     await ctx.send(random.choice(err_msg))
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     # Grab all the .py files from the cogs directory and load them into the bot
     # This lets us keep the main file simple and exports all command logic to the cogs files
     cogs = [x.replace('.py', '') for x in os.listdir('cogs') if x.endswith('.py')]
