@@ -7,8 +7,8 @@ import re
 
 
 url = "https://inspirobot.me/api?generateFlow=1"
-min_minutes = 5
-max_minutes = 720 # 12 hours
+min_hours = 1
+max_hours = 12
 
 
 class RandomInspiration(commands.Cog):
@@ -21,9 +21,9 @@ class RandomInspiration(commands.Cog):
         
     async def inspirationLoop(self):
         while True:
-            sleep_minutes = random.randint(min_minutes, max_minutes)
-            print(f"RandomInspiration: sleeping for {sleep_minutes} minutes")
-            await asyncio.sleep(sleep_minutes * 60)
+            sleep_minutes = random.randint(min_hours, max_hours)
+            print(f"RandomInspiration: sleeping for {sleep_hours} hours")
+            await asyncio.sleep(sleep_hours * 60 * 60)
             x = requests.get(url)  
             message = re.sub("\[.+\]", '', x.json()['data'][1]['text'])
             chan = await self.bot.fetch_channel(382924474573389828)
