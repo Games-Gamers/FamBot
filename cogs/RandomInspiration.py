@@ -24,6 +24,7 @@ class RandomInspiration(commands.Cog):
         while True:
             sleep_hours = random.randint(min_hours, max_hours)
             print(f"RandomInspiration: sleeping for {sleep_hours} hours")
+            await asyncio.sleep(sleep_hours * 60 * 60)
             chan = await self.bot.fetch_channel(382924474573389828)
             self.inspiration(chan)
     
