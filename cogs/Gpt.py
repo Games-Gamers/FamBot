@@ -4,13 +4,11 @@ from config.settings import GPT_TOKEN
 import re, string
 
 bot_name = "butlerbot"
-model = "text-davinci-003"
-completion_type = "text" # either text or chat
+model = "gpt-4"
 target_channel = 1048743997432143902
 memory_limit = 40
 prompt = f"""
-You are a regular member of my discord server, with a sassy personality. Your name is {bot_name}, and everyone wants to hear what you have to say.
-The following is the conversation so far, including your previous responses. It is formatted in a "[username] message" format.
+You are a regular member of my discord server. Your name is {bot_name}.
 """
 
 name_pattern = r'\W+'
@@ -56,28 +54,15 @@ class Gpt(commands.Cog):
         if msg.content.startswith(f"{bot_name}: "):
             await msg.channel.typing()
 
-            if completion_type == "chat":
-                response = openai.ChatCompletion.create(
-                    model=model,
-                    messages=[{"role": "system", "content": prompt}] + self.chat_history,
-                    timeout=30,
-                    user=msg.author.name
-                )
-                message = response.choices[0].message.content
-            elif completion_type == "text":
-                text_prompt = prompt
-                for chat in self.chat_history:
-                    text_prompt += f"\n[{chat['name']}] {chat['content']}"
-                print(len(text_prompt))
-                response = openai.Completion.create(
-                    model=model,
-                    prompt=text_prompt,
-                    max_tokens=1000,
-                    timeout=30,
-                    user=msg.author.name
-                )
-                message = response.choices[0].text
-                message = message.replace("[butlerbot]", '')
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=[{"role": "system", "content": prompt}] + self.chat_history,
+                timeout=30,
+                user=msg.author.name,
+                temperature=1
+            )
+            print(response)
+            message = response.choices[0].message.content
             print("------ ai response generated ------")
             print(f"- {len(self.chat_history)} {message}")
             message = re.sub("[aA]s an AI language model,? ", '', message) # Get rid of its stupid warning it gives all the time
