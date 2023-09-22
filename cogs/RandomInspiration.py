@@ -1,7 +1,7 @@
 from discord.ext import commands
 import random
 import openai
-from config.settings import LOG_CHANNEL
+from config.settings import GPT_TOKEN
 import asyncio
 
 url = "https://inspirobot.me/api?generateFlow=1"

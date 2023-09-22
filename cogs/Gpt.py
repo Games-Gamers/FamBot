@@ -1,7 +1,7 @@
 from discord.ext import commands
 import openai
 from config.settings import GPT_TOKEN
-import re, string
+import re
 
 bot_name = "butlerbot"
 model = "gpt-4"
