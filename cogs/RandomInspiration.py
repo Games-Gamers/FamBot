@@ -21,7 +21,7 @@ class RandomInspiration(commands.Cog):
         
     async def inspirationLoop(self):
         while True:
-            sleep_minutes = random.randint(min_hours, max_hours)
+            sleep_hours = random.randint(min_hours, max_hours)
             print(f"RandomInspiration: sleeping for {sleep_hours} hours")
             await asyncio.sleep(sleep_hours * 60 * 60)
             x = requests.get(url)  
