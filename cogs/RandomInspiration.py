@@ -16,6 +16,7 @@ class RandomInspiration(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        openai.api_key = GPT_TOKEN
         asyncio.create_task(self.inspirationLoop())
         
         
