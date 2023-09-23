@@ -23,12 +23,6 @@ class Gpt(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        """Message Responses
-        - Adds the :FAM: reaction whenever a user sends a message containing 'fam'
-        - 'lmao gottem' responses
-        Args:
-            msg (Message): Discord Message object
-        """
         msg.content = msg.content.lower()
 
         if msg.author == self.bot.user or msg.channel.id != target_channel:
