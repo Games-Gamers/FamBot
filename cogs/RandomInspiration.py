@@ -26,7 +26,7 @@ class RandomInspiration(commands.Cog):
             print(f"RandomInspiration: sleeping for {sleep_hours} hours")
             await asyncio.sleep(sleep_hours * 60 * 60)
             chan = await self.bot.fetch_channel(382924474573389828)
-            self.inspiration(chan)
+            await self.inspiration(chan)
     
     
     @commands.command()
