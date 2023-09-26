@@ -89,7 +89,7 @@ class KeywordResponder(commands.Cog):
         # suh
         if (search('suh', content)):
             print(f'responding to "suh" from {msg.author}')
-            await msg.channel.send('https://gfycat.com/adventurousfarazurewingedmagpie')
+            await msg.channel.send('https://media.giphy.com/media/OuwYj5XaGu2yc/giphy.gif')
             
         # get drinked sticker response
         if len(msg.stickers) != 0:
