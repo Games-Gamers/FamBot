@@ -49,6 +49,10 @@ class VideoLinkEmbeds(commands.Cog):
             url = found_url.group()
             await msg.channel.typing()
 
+            # detect if embed exists already and has a video element
+            if len(msg.embeds) > 0 and msg.embeds[0].video:
+                return
+
             # gpt generated response
             gpt_response = openai.ChatCompletion.create(
                 model=model,
