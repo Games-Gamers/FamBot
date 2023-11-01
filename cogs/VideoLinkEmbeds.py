@@ -1,6 +1,7 @@
 from discord.ext import commands
 import re
 import openai
+from config.settings import GPT_TOKEN
 
 model = "gpt-4"
 resp_prompt = f"""
