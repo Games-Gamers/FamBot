@@ -1,6 +1,5 @@
 from discord.ext import commands
 import re
-import random
 import openai
 
 model = "gpt-4"
@@ -20,7 +19,7 @@ class VideoLinkEmbeds(commands.Cog):
             "instagram.com": "dd",
             "tiktok.com": "vx",
             "twitter.com": "vx",
-            "x.com": "vx",
+            "x.com": "vxtwitter",
         }
 
         ### hardcoded responses if gpt doesn't work out
@@ -47,18 +46,18 @@ class VideoLinkEmbeds(commands.Cog):
         # add substring into url
         if found_url:
             url = found_url.group()
-            await msg.channel.typing()
 
             # detect if embed exists already and has a video element
             if len(msg.embeds) > 0 and msg.embeds[0].video:
                 return
 
+            await msg.channel.typing()
             # gpt generated response
             gpt_response = openai.ChatCompletion.create(
                 model=model,
                 messages=[{"role": "user", "content": resp_prompt}],
-                timeout=30
-                user.msg.author.name
+                timeout=30,
+                user=msg.author.name
             )
             print(gpt_response)
             fambot_response = gpt_response.choices[0].message.content
@@ -66,10 +65,15 @@ class VideoLinkEmbeds(commands.Cog):
             print(f"- {fambot_response}")
 
             for base, modification in sources.items():
-                embed_url = url.replace(base, f"{modification}{base}")
-                # await msg.channel.send(f'{random.choice(responses)}\n{embed_url}')
-                await msg.channel.send(f'{fambot_response}\n{embed_url}')
-                break # only fix a single link
+                # change x.com to twitter.com since x.com doesn't work with mods
+                if base == "x.com":
+                    base = "twitter.com"
+
+                # add modification to front of base url
+                if base in url:
+                    embed_url = url.replace(base, f"{modification}{base}")
+                    await msg.channel.send(f'{fambot_response}\n{embed_url}')
+                    break # only fix a single link
 
 async def setup(bot):
     await bot.add_cog(VideoLinkEmbeds(bot))
