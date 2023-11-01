@@ -5,7 +5,7 @@ from config.settings import GPT_TOKEN
 
 model = "gpt-4"
 resp_prompt = f"""
-I have a discord bot, "FamBot", that fixes links shared in the chat. Generate a response that the bot would reply with when posting the fixed link. Use a personality for the bot that's akin to a gamer, internet commenter, and zoomer. Just include the response without quotes or a placeholder for the link like '[fixed link]`
+I have a discord bot, "FamBot", that fixes links shared in the chat. Generate a response that the bot would reply with when posting the fixed link. Use a personality for the bot that's akin to a gamer, internet commenter, and zoomer. Just include the response without quotes. Don't include placeholder for the link like [fixed link].
 """
 class VideoLinkEmbeds(commands.Cog):
     
@@ -37,8 +37,6 @@ class VideoLinkEmbeds(commands.Cog):
 
         url_pattern = re.compile(r'https?://[^\s<>"]+|www\.[^\s<>"]+')
 
-        msg.content = msg.content.lower()
-
         if msg.author == self.bot.user:
             return
         
@@ -52,7 +50,7 @@ class VideoLinkEmbeds(commands.Cog):
             if len(msg.embeds) > 0 and msg.embeds[0].video:
                 return
 
-            await msg.channel.typing()
+            
             # gpt generated response
             gpt_response = openai.ChatCompletion.create(
                 model=model,
@@ -71,8 +69,9 @@ class VideoLinkEmbeds(commands.Cog):
                     base = "twitter.com"
 
                 # add modification to front of base url
-                if base in url:
+                if base in url and f"{modification}{base}" not in url:
                     embed_url = url.replace(base, f"{modification}{base}")
+                    await msg.channel.typing()
                     await msg.channel.send(f'{fambot_response}\n{embed_url}')
                     break # only fix a single link
 
