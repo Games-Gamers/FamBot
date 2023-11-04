@@ -33,7 +33,7 @@ class RandomInspiration(commands.Cog):
     async def inspiration(self, ctx):
         response = openai.ChatCompletion.create(
             model=model,
-            messages=[{"role": "user", "content": "generate an original toxic inspirational quote that isn't actually inspirational"}],
+            messages=[{"role": "user", "content": "generate original aspirational quote about having or getting money that is possibly a bit toxic"}],
             timeout=30,
             temperature=1
         )
