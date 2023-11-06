@@ -4,8 +4,8 @@ import openai
 from config.settings import GPT_TOKEN
 
 model = "gpt-4"
-resp_prompt = f"""
-I have a discord bot, "FamBot", that fixes links shared in the chat. Generate a response that the bot would reply with when posting the fixed link. Use a personality for the bot that's akin to a gamer, internet commenter, and zoomer. Just include the response without quotes. Don't include placeholder for the link like [fixed link].
+resp_prompt = """
+I have a discord bot, "FamBot", that fixes links shared in the chat. Generate a short response that the bot would reply with when posting the fixed link. Use a personality for the bot that's akin to a internet commenter and zoomer. Just include the response without quotes. Don't include placeholder for the link like [fixed link].
 """
 class VideoLinkEmbeds(commands.Cog):
     
@@ -47,10 +47,10 @@ class VideoLinkEmbeds(commands.Cog):
             url = found_url.group()
 
             # detect if embed exists already and has a video element
-            if len(msg.embeds) > 0 and msg.embeds[0].video:
+            if (len(msg.embeds) > 0 and msg.embeds[0].video) \
+                or (len(msg.embeds) > 0 and "twitter.com" in url):
                 return
 
-            
             # gpt generated response
             gpt_response = openai.ChatCompletion.create(
                 model=model,
@@ -73,7 +73,7 @@ class VideoLinkEmbeds(commands.Cog):
                     embed_url = url.replace(base, f"{modification}{base}")
                     await msg.channel.typing()
                     await msg.channel.send(f'{fambot_response}\n{embed_url}')
-                    break # only fix a single link
+                    break # only fix a single link in a single message
 
 async def setup(bot):
     await bot.add_cog(VideoLinkEmbeds(bot))
