@@ -23,12 +23,12 @@ class Gpt(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        msg.content = msg.content.lower()
+        content = msg.content.lower()
 
         if msg.author == self.bot.user or msg.channel.id != target_channel:
             return
         
-        if msg.content == f"{bot_name}: sudo fuck off":
+        if content == f"{bot_name}: sudo fuck off":
             print("------ shutdown command ------")
             await msg.channel.send("[system message] shutting down")
             exit()
@@ -43,9 +43,9 @@ class Gpt(commands.Cog):
                 self.chat_history.append({"role": "user", 'name': clean_name, "content": message.content.lower().replace(f'{bot_name}: ', '')})
         
         clean_name = re.sub(name_pattern, '', msg.author.name)
-        self.chat_history.append({"role": "user", 'name': clean_name, "content": msg.content.replace(f'{bot_name}: ', '')})
+        self.chat_history.append({"role": "user", 'name': clean_name, "content": content.replace(f'{bot_name}: ', '')})
 
-        if msg.content.startswith(f"{bot_name}: "):
+        if content.startswith(f"{bot_name}: "):
             await msg.channel.typing()
 
             response = openai.ChatCompletion.create(
