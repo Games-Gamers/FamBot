@@ -20,7 +20,7 @@ class VideoLinkEmbeds(commands.Cog):
             "instagram.com": "dd",
             "tiktok.com": "vx",
             "twitter.com": "vx",
-            "x.com": "vxtwitter",
+            "x.com": "fixv",
         }
 
         ### hardcoded responses if gpt doesn't work out
@@ -64,10 +64,6 @@ class VideoLinkEmbeds(commands.Cog):
             print(f"- {fambot_response}")
 
             for base, modification in sources.items():
-                # change x.com to twitter.com since x.com doesn't work with mods
-                if base == "x.com":
-                    base = "twitter.com"
-
                 # add modification to front of base url
                 if base in url and f"{modification}{base}" not in url:
                     embed_url = url.replace(base, f"{modification}{base}")
