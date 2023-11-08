@@ -12,17 +12,28 @@ class VideoLinkEmbeds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         openai.api_key = GPT_TOKEN
-
-    @commands.Cog.listener()
-    async def on_message(self, msg):
         # substrings to be inserted in url for fixing embeds
-        sources = {
+        self.sources = {
             "instagram.com": "dd",
             "tiktok.com": "vx",
             "twitter.com": "vx",
             "x.com": "fixv",
         }
 
+    def find_valid_url(self, message):
+        url_pattern = re.compile(r'https?://(?:www\.)?(\w+\.com)(?!\.com)')
+        # find all URLs in the msg content
+        found_url = url_pattern.search(message)
+        if found_url:
+            # extract the domain part from the URL
+            domain = found_url.group(1)
+            # compare the extracted domain against base urls
+            if domain in self.sources:
+                return found_url.group(0)
+            return None
+
+    @commands.Cog.listener()
+    async def on_message(self, msg):
         ### hardcoded responses if gpt doesn't work out
         # responses = {
         #     "I gotchu, Fam",
@@ -35,7 +46,9 @@ class VideoLinkEmbeds(commands.Cog):
         #     "And some of yall have me blocked when I'm out here being helpful, smh"
         # }
 
-        url_pattern = re.compile(r'https?://[^\s<>"]+|www\.[^\s<>"]+')
+        # Regex pattern to match the desired URLs and ignore any with ".com" in the path/query
+        # god this is getting long pls work
+        url_pattern = re.compile(r'https?://(?:www\.)?([\w-]+\.com)(?!.*?\.com)(/[^?#\s]*)?(\?[^#\s]*)?(#[^\s]*)?')
 
         if msg.author == self.bot.user:
             return
@@ -63,7 +76,7 @@ class VideoLinkEmbeds(commands.Cog):
             print("------ ai response generated ------")
             print(f"- {fambot_response}")
 
-            for base, modification in sources.items():
+            for base, modification in self.sources.items():
                 # add modification to front of base url
                 if base in url and f"{modification}{base}" not in url:
                     embed_url = url.replace(base, f"{modification}{base}")
