@@ -1,4 +1,4 @@
-FROM arm32v7/python:3.11
+FROM python:3.12
 
 WORKDIR /app
 
