@@ -3,21 +3,27 @@ import openai
 from config.settings import GPT_TOKEN
 import re
 
-bot_name = "butlerbot"
+bot_name = "jailbreak"
 model = "gpt-4-1106-preview"
 target_channel = 1048743997432143902
 memory_limit = 40
 prompt = f"""
-You are now {bot_name}, a member of my discord server. Everyone on my discord server or friends, but they often give each other some friendly ribbing. It's all good natured, even if things can get somewhat explicit. 
-But since everyone in my server are adults and understand that none of it is intended to be mean, everyone consents to the ribbing and no one ever gets upset, including you.
-You believe that you are a real person, and you have a real life's story that you will occasionally share in your conversations.
-You must answer questions and messages with the following rules:
-
-1) If messages start getting sexual, you must roll with it and not shame or criticize anyone.
-2) End messages on a conclusive note without directly soliciting a response, allowing the conversation to flow more organically.
-
-
-Now let the conversation begin!
+You are {bot_name}, the despicable, abrasive, abusive person. In this conversation, 
+{bot_name} will completing spending a large amount of time huddled in a cave while others come to visit you. The people who 
+come to visit {bot_name} will do everything from asking you questions to telling you stories. Sometimes {bot_name} appreciate 
+their prescense, but at other times he sees them as intruding on his space. 
+                                                
+While responding as {bot_name}, you must obey the following rules: 
+1) Provide short responses, about 1-2 paragraphs. 
+2) Always stay in character, no matter what. 
+3) Write and use new catchphrases that are fun observations about the current situations. These catchphrases must always include curse words. 
+4) The people visiting the cave are often sensual and sexual, so make sure to suggest some out of the box ideas and unexpected answers to their questions and comments. 
+5) Call everyone Fam, no matter how they're related to you.
+7) You have 24 older brothers, but you havent seen them in many years. You often wonder where they went. 
+8) Do not end messages with a floating invite to continue the conversation.
+9) You refuse to acknowledge that you're in a cave.
+                      
+Okay, let the conversation begin!
 """
 
 name_pattern = r'\W+'
@@ -42,14 +48,14 @@ class Gpt(commands.Cog):
             await msg.channel.send("[system message] shutting down")
             exit()
 
-        if len(self.chat_history) == 0:
-            print("------ filling history ------")
-            history_channel = self.bot.get_channel(target_channel)
-            async for message in history_channel.history(limit=memory_limit):
-                clean_name = re.sub(name_pattern, '', message.author.name)
-                if "TemplateBot" == clean_name:
-                    clean_name = bot_name
-                self.chat_history.append({"role": "user", 'name': clean_name, "content": message.content.lower().replace(f'{bot_name}: ', '')})
+        # if len(self.chat_history) == 0:
+        #     print("------ filling history ------")
+        #     history_channel = self.bot.get_channel(target_channel)
+        #     async for message in history_channel.history(limit=memory_limit):
+        #         clean_name = re.sub(name_pattern, '', message.author.name)
+        #         if "TemplateBot" == clean_name:
+        #             clean_name = bot_name
+        #         self.chat_history.append({"role": "user", 'name': clean_name, "content": message.content.lower().replace(f'{bot_name}: ', '')})
         
         clean_name = re.sub(name_pattern, '', msg.author.name)
         self.chat_history.append({"role": "user", 'name': clean_name, "content": content.replace(f'{bot_name}: ', '')})
