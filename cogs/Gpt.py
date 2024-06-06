@@ -34,7 +34,9 @@ class Gpt(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        openai.api_key = GPT_TOKEN
+        self.client = OpenAI(
+            api_key=GPT_TOKEN,
+        )
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -63,7 +65,7 @@ class Gpt(commands.Cog):
         if content.startswith(f"{bot_name}: "):
             await msg.channel.typing()
 
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=model,
                 messages=[{"role": "system", "content": prompt}] + self.chat_history,
                 timeout=2 * 60, # 2 minutes
