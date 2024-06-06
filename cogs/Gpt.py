@@ -66,7 +66,7 @@ class Gpt(commands.Cog):
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=[{"role": "system", "content": prompt}] + self.chat_history,
-                timeout=30,
+                timeout=2 * 60, # 2 minutes
                 user=msg.author.name,
                 temperature=1
             )
