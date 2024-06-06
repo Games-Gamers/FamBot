@@ -1,5 +1,5 @@
 from discord.ext import commands
-import openai
+from openai import OpenAI
 from config.settings import GPT_TOKEN
 import re
 
