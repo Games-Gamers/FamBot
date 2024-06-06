@@ -4,7 +4,7 @@ from config.settings import GPT_TOKEN
 import re
 
 bot_name = "butlerbot"
-model = "gpt-4-1106-preview"
+model = "gpt-4-turbo"
 target_channel = 1048743997432143902
 memory_limit = 40
 prompt = f"""
